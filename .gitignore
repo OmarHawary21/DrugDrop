@@ -47,9 +47,15 @@ app.*.map.json
 .idea
 android
 build
+ios
+linux
+macos
 test
+web
+windows
 .metadata
 analysis_options.yaml
 drug_drop.iml
 pubspec.lock
 pubspec.yaml
+README.md
