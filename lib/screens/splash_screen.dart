@@ -1,0 +1,80 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:animate_do/animate_do.dart';
+
+import 'log_in_screen.dart';
+import '../icons/my_flutter_app_icons.dart';
+
+class SplashScreen extends StatefulWidget {
+  static const routeName = '/';
+
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    Future.delayed(
+      const Duration(seconds: 3),
+      () {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => LogInScreen(),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FadeIn(
+        duration: Duration(milliseconds: 2000),
+        child: Container(
+          alignment: Alignment.center,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            color: Color.fromRGBO(255, 252, 252, 1),
+          ),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'DrugDrop',
+                  style: TextStyle(
+                    fontFamily: 'PollerOne',
+                    fontSize: 30,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(width: 3),
+                Transform.rotate(
+                  angle: 30 * pi / 180,
+                  child: const Icon(
+                    MyFlutterApp.pills,
+                    color: Color.fromRGBO(68, 191, 219, 1),
+                  ),
+                ),
+              ]),
+        ),
+      ),
+    );
+  }
+}
