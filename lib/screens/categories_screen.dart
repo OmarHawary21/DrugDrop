@@ -1,70 +1,72 @@
+import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-
-import 'category_drugs_screen.dart';
+import 'package:provider/provider.dart';
 import '../providers/categories_provider.dart';
+import '/widgets/category_item.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   static const routeName = '/home';
 
-  final List<Map<String, dynamic>> categories = CategoriesProvider().categories;
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> {
+  var _isInit = true;
+  var _isLoading = false;
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<CategoriesProvider>(context).fetchCategories().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final categoryData =
+        Provider.of<CategoriesProvider>(context, listen: false);
     var colorScheme = Theme.of(context).colorScheme;
-    return SingleChildScrollView(
+    return FadeInRight(
+      duration: const Duration(milliseconds: 400),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-          children: categories
-              .map(
-                (cat) => GestureDetector(
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushNamed(CategoryDrugsScreen.routeName);
-                  },
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.12,
-                    child: Card(
-                      margin: const EdgeInsets.only(
-                        bottom: 10,
-                        left: 10,
-                        right: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: colorScheme.primary),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      color:  const Color.fromRGBO(219, 243, 250, 1),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width * 0.13,
-                          right: MediaQuery.of(context).size.width * 0.05,
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              cat['icon'],
-                              color: colorScheme.primary,
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              cat['name'],
-                              style: TextStyle(
-                                  color: colorScheme.primary,
-                                  fontSize: 15,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+        padding: const EdgeInsets.only(top: 10),
+        child: _isLoading
+            ? Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.31,
+                    horizontal: MediaQuery.of(context).size.width * 0.32),
+                child: LiquidCircularProgressIndicator(
+                  value: 0.4,
+                  backgroundColor: colorScheme.secondary,
+                  valueColor: AlwaysStoppedAnimation(colorScheme.primary),
+                  center: Text(
+                    "Loading...",
+                    style: TextStyle(color: colorScheme.primary),
                   ),
                 ),
               )
-              .toList(),
-        ),
+            : ListView.builder(
+                itemCount: categoryData.categories.length,
+                itemBuilder: (_, i) => Column(
+                  children: [
+                    CategroyItem(
+                      categoryData.categories[i].id,
+                      categoryData.categories[i].name,
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }
