@@ -7,6 +7,9 @@ import '../widgets/logo.dart';
 class ForgotPasswordScreen extends StatelessWidget {
   static const routeName = '/forgot-password';
 
+  final _formKey = GlobalKey<FormState>();
+  late final String phoneNumber;
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -51,61 +54,60 @@ class ForgotPasswordScreen extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    elevation: 10,
-                    color: const Color.fromRGBO(230, 240, 255, 1),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.1),
                     child: TextFormField(
-                      maxLength: 8,
-                      maxLines: 1,
                       textAlignVertical: TextAlignVertical.center,
-                      textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.phone,
-                      style: TextStyle(color: theme.colorScheme.primary),
+                      maxLines: 1,
+                      maxLength: 8,
                       decoration: InputDecoration(
-                        constraints: BoxConstraints(
-                          maxHeight: media.size.height * 0.055,
-                          maxWidth: media.size.width * 0.8,
+                        contentPadding: const EdgeInsets.only(left: 15),
+                        prefixIcon: const Icon(Icons.phone),
+                        prefixIconColor: theme.colorScheme.primary,
+                        prefix: const Padding(
+                          padding: EdgeInsets.only(right: 5),
+                          child: Text('09'),
                         ),
-                        isDense: true,
-                        counterText: '',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+                        prefixStyle: TextStyle(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
                         ),
                         label: const Text('Phone Number'),
-                        prefixIcon: Icon(
-                          Icons.phone,
-                          color: theme.colorScheme.primary,
-                          size: 18,
-                        ),
-                        prefix: Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: Text(
-                            '09',
-                            style: TextStyle(color: theme.colorScheme.primary),
-                          ),
+                        isDense: true,
+                        filled: true,
+                        fillColor: theme.colorScheme.secondary,
+                        counterText: '',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
                         ),
                       ),
+                      validator: (phoneNumber) {
+                        if (phoneNumber!.isEmpty) {
+                          return 'This field is required';
+                        } else if (phoneNumber.length < 8) {
+                          return 'Must be 8 digits';
+                        }
+                      },
+                      onSaved: (phoneNumber) =>
+                          phoneNumber = phoneNumber.toString(),
                     ),
                   ),
                   const Spacer(),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.35,
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.of(context)
-                          .pushNamed(OTPScreen.routeName),
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pushNamed(OTPScreen.routeName),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: theme.colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      child: const Text(
-                        'Send',
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
+                    ),
+                    child: const Text(
+                      'Send',
+                      style: TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   const Spacer(),

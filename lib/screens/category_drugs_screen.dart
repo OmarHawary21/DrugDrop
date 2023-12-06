@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 
+import 'cart_screen.dart';
 import '../widgets/drugs_list.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -28,7 +29,7 @@ class _CategoryDrugsScreenState extends State<CategoryDrugsScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).pushNamed(CartScreen.routeName),
             icon: Icon(
               Icons.shopping_cart,
               color: theme.colorScheme.primary,

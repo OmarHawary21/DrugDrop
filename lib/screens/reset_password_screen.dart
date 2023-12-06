@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../screens/log_in_screen.dart';
 import '../widgets/logo.dart';
 import '../widgets/olives.dart';
 
@@ -54,26 +55,22 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
               ),
               const Spacer(),
-              PassWordField('Password'),
-              SizedBox(height: height * 0.02),
-              PassWordField('Confirm Password'),
+              PasswordForm(),
               const Spacer(),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.05,
-                width: MediaQuery.of(context).size.width * 0.35,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).popAndPushNamed('/');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).popAndPushNamed(LogInScreen.routeName);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                  child: const Text(
-                    'Reset',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                ),
+                child: const Text(
+                  'Reset',
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
               const Spacer(),
@@ -86,54 +83,82 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   }
 }
 
-class PassWordField extends StatefulWidget {
-  final String label;
-
-  PassWordField(this.label);
-
+class PasswordForm extends StatefulWidget {
   @override
-  State<PassWordField> createState() => _PassWordFieldState();
+  State<PasswordForm> createState() => _PasswordFormState();
 }
 
-class _PassWordFieldState extends State<PassWordField> {
+class _PasswordFormState extends State<PasswordForm> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    var media = MediaQuery.of(context);
-    return Card(
-      color: const Color.fromRGBO(230, 240, 255, 1),
-      elevation: 10,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: TextFormField(
-        obscureText: _isVisible,
-        textInputAction: TextInputAction.done,
-        textAlignVertical: TextAlignVertical.center,
-        decoration: InputDecoration(
-          constraints: BoxConstraints(
-            maxHeight: media.size.height * 0.055,
-            maxWidth: media.size.width * 0.8,
-          ),
-          isDense: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          label: Text(widget.label),
-          prefixIcon: Icon(
-            Icons.lock,
-            color: theme.colorScheme.primary,
-            size: 18,
-          ),
-          suffixIcon: IconButton(
-            splashRadius: 20,
-            onPressed: () => setState(() => _isVisible = !_isVisible),
-            icon: Icon(
-              _isVisible ? Icons.visibility : Icons.visibility_off,
-              color: theme.colorScheme.primary,
-              size: 18,
+    var size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              obscureText: _isVisible,
+              textAlignVertical: TextAlignVertical.center,
+              textInputAction: TextInputAction.next,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.only(left: 15),
+                prefixIcon: const Icon(Icons.lock),
+                prefixIconColor: theme.colorScheme.primary,
+                label: const Text('Password'),
+                suffixIcon: IconButton(
+                  onPressed: () => setState(() => _isVisible = !_isVisible),
+                  icon: Icon(
+                      _isVisible ? Icons.visibility : Icons.visibility_off),
+                ),
+                suffixIconColor: theme.colorScheme.primary,
+                isDense: true,
+                filled: true,
+                fillColor: theme.appBarTheme.backgroundColor,
+                counterText: '',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              validator: (phoneNumber) {
+                if (phoneNumber!.isEmpty) {
+                  return 'This field is required';
+                }
+              },
             ),
-          ),
+            const SizedBox(height: 10),
+            TextFormField(
+              obscureText: _isVisible,
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.only(left: 15),
+                prefixIcon: const Icon(Icons.lock),
+                prefixIconColor: theme.colorScheme.primary,
+                label: const Text('Confirm Password'),
+                suffixIcon: IconButton(
+                  onPressed: () => setState(() => _isVisible = !_isVisible),
+                  icon: Icon(
+                      _isVisible ? Icons.visibility : Icons.visibility_off),
+                ),
+                suffixIconColor: theme.colorScheme.primary,
+                isDense: true,
+                filled: true,
+                fillColor: theme.appBarTheme.backgroundColor,
+                counterText: '',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              validator: (phoneNumber) {
+                if (phoneNumber!.isEmpty) {
+                  return 'This field is required';
+                }
+              },
+            ),
+          ],
         ),
       ),
     );

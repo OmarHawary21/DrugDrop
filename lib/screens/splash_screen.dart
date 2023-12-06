@@ -8,7 +8,7 @@ import 'log_in_screen.dart';
 import '../icons/my_flutter_app_icons.dart';
 
 class SplashScreen extends StatefulWidget {
-  static const routeName = '/';
+  static const routeName = '/splash';
 
   const SplashScreen({super.key});
 

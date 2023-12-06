@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:provider/provider.dart';
 
 import 'categories_screen.dart';
+import 'cart_screen.dart';
+import 'orders_screen.dart';
+import '../providers/cart_provider.dart';
 
 class HomeBottomBar extends StatefulWidget {
   static const routeName = '/home-bottom-bar';
@@ -14,14 +18,12 @@ class HomeBottomBar extends StatefulWidget {
 class _HomeBottomBarState extends State<HomeBottomBar> {
   final List<Map<String, dynamic>> _screens = [
     {
-      'title': 'Home',
-      'screen': Center(
-        child: Text('Upcoming'),
-      ),
+      'title': 'Orders',
+      'screen': OrdersScreen(),
     },
     {
-      'title': 'Home',
-      'screen': Center(
+      'title': 'Search',
+      'screen': const Center(
         child: Text('Upcoming'),
       ),
     },
@@ -30,14 +32,14 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
       'screen': CategoriesScreen(),
     },
     {
-      'title': 'Home',
-      'screen': Center(
+      'title': 'Favorites',
+      'screen': const Center(
         child: Text('Upcoming'),
       ),
     },
     {
-      'title': 'Home',
-      'screen': Center(
+      'title': 'Profile',
+      'screen': const Center(
         child: Text('Upcoming'),
       ),
     },
@@ -48,8 +50,6 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
   void _selectScreen(int index) => setState(() {
     _previousIndex = _selectedIndex;
     _selectedIndex = index;
-    print('Previous $_previousIndex');
-    print('Current $_selectedIndex');
   });
 
   @override
@@ -58,64 +58,75 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Text(_screens[_selectedIndex]['title']),
+        ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.shopping_cart,
-              color: colorScheme.primary,
+          Consumer<CartProvider>(
+            builder: (_, cart, ch) => Badge(
+              backgroundColor: Colors.transparent,
+              // alignment: Alignment.bottomRight,
+              offset: const Offset(-2, 4),
+              label: Text(cart.productCount.toString()),
+              child: ch,
+            ),
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pushNamed(CartScreen.routeName),
+              icon: const Icon(
+                Icons.shopping_cart,
+              ),
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.settings,
-              color: colorScheme.primary,
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.settings,
+              ),
             ),
           ),
         ],
       ),
       body: _previousIndex > _selectedIndex ? FadeInLeft(
-        duration: Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 600),
         child: _screens[_selectedIndex]['screen'],
       ) : FadeInRight(
-        duration: Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 600),
         child: _screens[_selectedIndex]['screen'],
       ),
-      bottomNavigationBar: Container(
-        child: CurvedNavigationBar(
-          height: MediaQuery.of(context).size.height * 0.08,
-          color: colorScheme.primary,
-          backgroundColor: Colors.transparent,
-          onTap: _selectScreen,
-          index: _selectedIndex,
-          animationCurve: Curves.easeInOut,
-          animationDuration: const Duration(milliseconds: 500),
-          items: const [
-            Icon(
-              Icons.local_shipping,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.home,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.favorite,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 25,
-            ),
-          ],
-        ),
+      bottomNavigationBar: CurvedNavigationBar(
+        height: MediaQuery.of(context).size.height * 0.08,
+        color: colorScheme.primary,
+        backgroundColor: Colors.transparent,
+        onTap: _selectScreen,
+        index: _selectedIndex,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 500),
+        items: const [
+          Icon(
+            Icons.local_shipping,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.search,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.home,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.favorite,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.person,
+            color: Colors.white,
+            size: 25,
+          ),
+        ],
       ),
     );
   }

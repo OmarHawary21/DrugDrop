@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../icons/my_flutter_app_icons.dart';
 
-class Logo extends StatelessWidget{
+class Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -16,7 +16,11 @@ class Logo extends StatelessWidget{
           children: [
             Text(
               'DrugDrop',
-              style: Theme.of(context).appBarTheme.titleTextStyle,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: 20,
+                fontFamily: 'PollerOne',
+              ),
             ),
             const SizedBox(width: 5),
             Transform.rotate(

@@ -1,45 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:provider/provider.dart';
 
-import 'log_in_screen.dart';
 import 'home_bottom_bar.dart';
+import 'log_in_screen.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/logo.dart';
-import '../widgets/olives.dart';
-import '../icons//my_flutter_app_icons.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends StatelessWidget {
   static const routeName = '/sign-up';
 
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
-
-var _isVisible;
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  final _nameFocusNode = FocusNode();
-  final _passwordFocusNode = FocusNode();
-  final _phoneNumberFocusNode = FocusNode();
-  final _confirmPasswordFocusNode = FocusNode();
-  final _locationFocusNode = FocusNode();
-  final _form = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    _isVisible = true;
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context);
-    var _constraints = BoxConstraints(
-      maxHeight: media.size.height * 0.055,
-      maxWidth: media.size.width * 0.8,
-    );
     return Scaffold(
       body: FadeIn(
         duration: const Duration(milliseconds: 2000),
@@ -55,337 +30,320 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Logo(),
-                  SizedBox(
-                    height: media.size.height * 0.2,
-                    child: SvgPicture.asset('assets/images/cuate.svg'),
-                  ),
+                  const Spacer(),
                   Text(
-                    'Create New\n    Account',
+                    'Create New\nAccount',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'PollerOne',
                       fontSize: media.size.height * 0.03,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  Form(
-                    key: _form,
-                    child: Column(
-                      children: [
-                        Card(
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: TextFormField(
-                            focusNode: _nameFocusNode,
-                            keyboardType: TextInputType.name,
-                            enabled: true,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: const Color.fromRGBO(230, 240, 255, 1),
-                              constraints: _constraints,
-                              labelText: 'Name',
-                              labelStyle: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Poppins',
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              prefixIcon: Icon(
-                                MyFlutterApp.user_1,
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 20,
-                              ),
-                              isDense: true,
-                              hintText: 'Enter Your Name',
-                              hintStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.5),
-                                fontSize: 12,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(width: 2),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            textInputAction: TextInputAction.next,
-                          ),
-                        ),
-                        SizedBox(height: media.size.height * 0.01),
-                        Card(
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: TextFormField(
-                            focusNode: _phoneNumberFocusNode,
-                            keyboardType: TextInputType.phone,
-                            enabled: true,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: const Color.fromRGBO(230, 240, 255, 1),
-                              constraints: _constraints,
-                              labelText: 'Phone Number',
-                              labelStyle: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Poppins',
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              prefixIcon: Icon(
-                                MyFlutterApp.phone,
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 20,
-                              ),
-                              isDense: true,
-                              hintText: '+963',
-                              hintStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.5),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(width: 2),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            textInputAction: TextInputAction.next,
-                          ),
-                        ),
-                        SizedBox(height: media.size.height * 0.01),
-                        Card(
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: TextFormField(
-                            obscureText: _isVisible,
-                            focusNode: _passwordFocusNode,
-                            keyboardType: TextInputType.visiblePassword,
-                            enabled: true,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: const Color.fromRGBO(230, 240, 255, 1),
-                              constraints: _constraints,
-                              labelText: 'Password',
-                              labelStyle: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: 'Poppins',
-                                  color: Theme.of(context).colorScheme.primary),
-                              prefixIcon: Icon(
-                                MyFlutterApp.lock,
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 20,
-                              ),
-                              isDense: true,
-                              hintText: 'Enter Your Password',
-                              hintStyle: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withOpacity(0.5),
-                                  fontSize: 14),
-                              suffixIcon: IconButton(
-                                splashRadius: 20,
-                                onPressed: () =>
-                                    setState(() => _isVisible = !_isVisible),
-                                icon: Icon(
-                                  _isVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: Theme.of(context).colorScheme.primary,
-                                  size: 18,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(width: 2),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            textInputAction: TextInputAction.next,
-                          ),
-                        ),
-                        SizedBox(height: media.size.height * 0.01),
-                        Card(
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: TextFormField(
-                            obscureText: _isVisible,
-                            focusNode: _confirmPasswordFocusNode,
-                            keyboardType: TextInputType.text,
-                            enabled: true,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: const Color.fromRGBO(230, 240, 255, 1),
-                              constraints: _constraints,
-                              labelText: 'Confirm Password',
-                              labelStyle: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Poppins',
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              prefixIcon: Icon(
-                                MyFlutterApp.lock,
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 20,
-                              ),
-                              suffixIcon: IconButton(
-                                splashRadius: 20,
-                                onPressed: () =>
-                                    setState(() => _isVisible = !_isVisible),
-                                icon: Icon(
-                                  _isVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: Theme.of(context).colorScheme.primary,
-                                  size: 18,
-                                ),
-                              ),
-                              isDense: true,
-                              hintText: 'Confirm Your Password',
-                              hintStyle: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withOpacity(0.5),
-                                  fontSize: 12),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(width: 2),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                20,
-                              )),
-                            ),
-                            textInputAction: TextInputAction.next,
-                          ),
-                        ),
-                        SizedBox(height: media.size.height * 0.01),
-                        Card(
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: TextFormField(
-                            focusNode: _locationFocusNode,
-                            keyboardType: TextInputType.text,
-                            enabled: true,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: const Color.fromRGBO(230, 240, 255, 1),
-                              constraints: _constraints,
-                              labelText: 'Location',
-                              labelStyle: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Poppins',
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.location_on,
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 20,
-                              ),
-                              isDense: true,
-                              hintText: 'Enter Your Location',
-                              hintStyle: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withOpacity(0.5),
-                                  fontSize: 12),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(width: 2),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            textInputAction: TextInputAction.done,
-                          ),
-                        ),
-                        SizedBox(height: media.size.height * 0.01),
-                        SizedBox(
-                          height: media.size.height * 0.05,
-                          width: media.size.width * 0.35,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Navigator.of(context).pushNamedAndRemoveUntil(
-                              //     HomeBottomBar.routeName, (Route<dynamic> route) => false);
-                              Navigator.of(context)
-                                  .popAndPushNamed(HomeBottomBar.routeName);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            child: Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                fontFamily: 'Poppins',
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Already Registered?',
-                              style: TextStyle(fontFamily: 'Poppins'),
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    LogInScreen.routeName,
-                                    (Route<dynamic> route) => false);
-                              },
-                              child: const Text(
-                                'log In',
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Olives(),
-                      ],
-                    ),
-                  ),
+                  const Spacer(flex: 2),
+                  _signUpForm(),
+                  const Spacer(flex: 2),
+                  // Olives(),
                 ],
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+var _isVisible;
+
+class _signUpForm extends StatefulWidget {
+  @override
+  State<_signUpForm> createState() => _signUpFormState();
+}
+
+class _signUpFormState extends State<_signUpForm> {
+  final _passwordController = TextEditingController();
+  final _form = GlobalKey<FormState>();
+  final Map<String, String> _authData = {
+    'name': '',
+    'password': '',
+    'confirmPassword': '',
+    'phoneNumber': '',
+    'location': '',
+  };
+
+  @override
+  void initState() {
+    _isVisible = true;
+    super.initState();
+  }
+
+  void _showDialog(BuildContext context, String content) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          'An error Occurred',
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
+        ),
+        content: Text(content),
+        actions: [
+          OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Try again'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _submit() async {
+    if (!_form.currentState!.validate()) {
+      return;
+    }
+    _form.currentState!.save();
+    try {
+      await Provider.of<AuthProvider>(context, listen: false).signUp(
+        _authData['name'].toString(),
+        _authData['phoneNumber'].toString(),
+        _authData['location'].toString(),
+        _authData['password'].toString(),
+      );
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          HomeBottomBar.routeName, (Route<dynamic> route) => false);
+    } catch (error) {
+      _showDialog(context,  error.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 35),
+      child: Form(
+        key: _form,
+        child: Column(
+          children: [
+            TextFormField(
+              textAlignVertical: TextAlignVertical.center,
+              textInputAction: TextInputAction.next,
+              textCapitalization: TextCapitalization.words,
+              maxLength: 255,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.only(left: 15),
+                prefixIcon: const Icon(Icons.person),
+                prefixIconColor: theme.colorScheme.primary,
+                label: const Text('Name'),
+                isDense: true,
+                filled: true,
+                fillColor: theme.appBarTheme.backgroundColor,
+                counterText: '',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              validator: (name) {
+                if (name!.isEmpty) {
+                  return 'This field is required';
+                }
+                return null;
+              },
+              onSaved: (name) => _authData['name'] = name.toString(),
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              textAlignVertical: TextAlignVertical.center,
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.phone,
+              maxLines: 1,
+              maxLength: 8,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.only(left: 15),
+                prefixIcon: const Icon(Icons.phone),
+                prefixIconColor: theme.colorScheme.primary,
+                prefix: const Padding(
+                  padding: EdgeInsets.only(right: 5),
+                  child: Text('09'),
+                ),
+                prefixStyle: TextStyle(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                ),
+                label: const Text('Phone Number'),
+                isDense: true,
+                filled: true,
+                fillColor: theme.appBarTheme.backgroundColor,
+                counterText: '',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              validator: (phoneNumber) {
+                if (phoneNumber!.isEmpty) {
+                  return 'This field is required';
+                } else if (phoneNumber.length < 8) {
+                  return 'Must be 8 digits';
+                }
+                return null;
+              },
+              onSaved: (phoneNumber) =>
+                  _authData['phoneNumber'] = phoneNumber.toString(),
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              obscureText: _isVisible,
+              textAlignVertical: TextAlignVertical.center,
+              maxLength: 255,
+              controller: _passwordController,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.only(left: 15),
+                prefixIcon: const Icon(Icons.lock),
+                prefixIconColor: theme.colorScheme.primary,
+                label: const Text('Password'),
+                suffixIcon: IconButton(
+                  onPressed: () => setState(() => _isVisible = !_isVisible),
+                  icon: Icon(
+                      _isVisible ? Icons.visibility : Icons.visibility_off),
+                ),
+                suffixIconColor: theme.colorScheme.primary,
+                isDense: true,
+                filled: true,
+                fillColor: theme.appBarTheme.backgroundColor,
+                counterText: '',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              validator: (password) {
+                if (password!.isEmpty) {
+                  return 'This field is required';
+                } else if (password.length < 4) {
+                  return 'Must be 4 digits or more';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              obscureText: _isVisible,
+              textAlignVertical: TextAlignVertical.center,
+              textInputAction: TextInputAction.next,
+              maxLength: 255,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.only(left: 15),
+                prefixIcon: const Icon(Icons.lock),
+                prefixIconColor: theme.colorScheme.primary,
+                label: const Text('Confirm Password'),
+                suffixIcon: IconButton(
+                  onPressed: () => setState(() => _isVisible = !_isVisible),
+                  icon: Icon(
+                      _isVisible ? Icons.visibility : Icons.visibility_off),
+                ),
+                suffixIconColor: theme.colorScheme.primary,
+                isDense: true,
+                filled: true,
+                fillColor: theme.appBarTheme.backgroundColor,
+                counterText: '',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              validator: (password) {
+                if (password!.isEmpty) {
+                  return 'This field is required';
+                } else if (password.length < 4) {
+                  return 'Must be 4 digits or more';
+                } else if (_passwordController.text != password) {
+                  return 'Password doesn\'t match';
+                }
+                return null;
+              },
+              onSaved: (password) =>
+                  _authData['password'] = password.toString(),
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              textAlignVertical: TextAlignVertical.center,
+              textInputAction: TextInputAction.done,
+              maxLength: 255,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.only(left: 15),
+                prefixIcon: const Icon(Icons.location_on),
+                prefixIconColor: theme.colorScheme.primary,
+                label: const Text('Location'),
+                isDense: true,
+                filled: true,
+                fillColor: theme.appBarTheme.backgroundColor,
+                counterText: '',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              validator: (location) {
+                if (location!.isEmpty) {
+                  return 'This field is required';
+                }
+                return null;
+              },
+              onSaved: (location) =>
+                  _authData['location'] = location.toString(),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: _submit,
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Colors.white,
+              ),
+              child: Text(
+                'Sign Up',
+                style: TextStyle(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  fontFamily: 'Poppins',
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Already Registered?',
+                  style: TextStyle(fontFamily: 'Poppins'),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        LogInScreen.routeName, (Route<dynamic> route) => false);
+                  },
+                  child: const Text(
+                    'log In',
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

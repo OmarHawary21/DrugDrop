@@ -70,23 +70,21 @@ class OTPScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    width: media.size.width * 0.35,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushReplacementNamed(
-                            ResetPasswordScreen.routeName);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed(
+                          ResetPasswordScreen.routeName);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: theme.colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      child: const Text(
-                        'Confirm',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    ),
+                    child: const Text(
+                      'Confirm',
+                      style: TextStyle(fontSize: 16),
                     ),
                   ),
                   Olives(),
