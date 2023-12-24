@@ -1,34 +1,66 @@
+import '../providers/drug_data.dart';
+import '../screens/drug-details-screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DrugItem extends StatelessWidget {
+  int id;
+  String imageUrl;
+  String price;
+  String tradeName;
+
+  DrugItem(this.id, this.imageUrl, this.price, this.tradeName);
+
   @override
   Widget build(BuildContext context) {
-    //final drug = Provider.of<Drug>(context, listen: false);
+    print('hiiiiiiiiiiiiiiiiiiiiii DrugItem');
     var theme = Theme.of(context);
     var media = MediaQuery.of(context).size;
-
+    final scaffold = ScaffoldMessenger.of(context);
     return Container(
-      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: theme.colorScheme.secondary,
+      ),
+      padding: const EdgeInsets.all(10),
+      margin: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundColor: Colors.blueGrey.withOpacity(0.2),
-            child: const Text(
-              'Drug Image',
-              style: TextStyle(
-                fontSize: 14,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(
+                DrugDetailsScreen.routeName,
+                arguments: id,
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: media.width * 0.01,
+                  vertical: media.height * 0.005),
+              child: Image.asset(
+                'assets/images/forgotPassword.png',
+                height: media.height * 0.1,
+                width: 120,
               ),
             ),
           ),
-          const SizedBox(height: 5),
           Text(
-            'Drug Name',
+            '$price S.P',
             style: TextStyle(
                 fontFamily: 'Poppins',
-                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
                 color: theme.colorScheme.primary),
-          )
+          ),
+          //SizedBox(height: media.height * 0.001),
+          Text(
+            tradeName,
+            style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+                color: theme.colorScheme.primary),
+          ),
         ],
       ),
     );

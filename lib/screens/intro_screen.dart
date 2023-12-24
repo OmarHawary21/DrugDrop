@@ -6,6 +6,7 @@ import 'sign_up_screen.dart';
 
 class IntroScreens extends StatefulWidget {
   static const routeName = '/intro';
+
   @override
   State<IntroScreens> createState() => _IntroScreensState();
 }
@@ -24,7 +25,7 @@ class _IntroScreensState extends State<IntroScreens> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FadeIn(
-        duration: Duration(milliseconds: 2000),
+        duration: const Duration(milliseconds: 2000),
         child: Container(
           padding: const EdgeInsets.only(bottom: 80),
           child: PageView(
@@ -149,9 +150,9 @@ class _IntroScreensState extends State<IntroScreens> {
           ? TextButton(
               style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(0),
                 ),
-                primary: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 minimumSize: const Size.fromHeight(80),
               ),
               onPressed: () async {
@@ -170,6 +171,7 @@ class _IntroScreensState extends State<IntroScreens> {
               ),
             )
           : Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
               padding: const EdgeInsets.symmetric(
                 horizontal: 29,
               ),
@@ -178,7 +180,9 @@ class _IntroScreensState extends State<IntroScreens> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: () => _controller.jumpToPage(2),
+                    onPressed: () => Navigator.of(context)
+                        .pushNamedAndRemoveUntil(
+                            SignUpScreen.routeName, (route) => false),
                     child: const Text(
                       'Skip',
                       style: TextStyle(

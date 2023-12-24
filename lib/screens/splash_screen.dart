@@ -8,7 +8,7 @@ import 'log_in_screen.dart';
 import '../icons/my_flutter_app_icons.dart';
 
 class SplashScreen extends StatefulWidget {
-  static const routeName = '/splash';
+  static const routeName = '/';
 
   const SplashScreen({super.key});
 
@@ -49,8 +49,8 @@ class _SplashScreenState extends State<SplashScreen>
         child: Container(
           alignment: Alignment.center,
           width: double.infinity,
-          decoration: const BoxDecoration(
-            color: Color.fromRGBO(255, 252, 252, 1),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
           ),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
                   style: TextStyle(
                     fontFamily: 'PollerOne',
                     fontSize: 30,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Color.fromRGBO(255, 252, 252, 1),
                   ),
                 ),
                 const SizedBox(width: 3),

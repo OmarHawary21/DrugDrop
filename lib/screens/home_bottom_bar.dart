@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'categories_screen.dart';
 import 'cart_screen.dart';
 import 'orders_screen.dart';
+import 'search-screen.dart';
 import '../providers/cart_provider.dart';
 
 class HomeBottomBar extends StatefulWidget {
@@ -23,9 +24,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
     },
     {
       'title': 'Search',
-      'screen': const Center(
-        child: Text('Upcoming'),
-      ),
+      'screen': SearchScreen(),
     },
     {
       'title': 'Home',
@@ -57,6 +56,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
     var colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.only(left: 10),

@@ -1,8 +1,9 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 import 'reset_password_screen.dart';
 import '../widgets/logo.dart';
-import '../widgets/olives.dart';
+import '../widgets/my_upper_clipper.dart';
 
 var OTP = '';
 
@@ -40,10 +41,26 @@ class OTPScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Transform.flip(
+                  flipX: true,
+                  flipY: true,
+                  child: ClipPath(
+                    clipper: MyUpperClipper(),
+                    child: Container(
+                      height: media.size.height * 0.2,
+                      width: double.infinity,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Logo(),
+                  const Spacer(),
                   SizedBox(
                     height: media.size.height * 0.3,
                     width: double.infinity,
@@ -56,24 +73,62 @@ class OTPScreen extends StatelessWidget {
                         fontFamily: 'PollerOne',
                         fontSize: media.size.width * 0.05),
                   ),
+                  const Spacer(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        OTPDigit(TextInputAction.next),
-                        OTPDigit(TextInputAction.next),
-                        OTPDigit(TextInputAction.next),
-                        OTPDigit(TextInputAction.next),
-                        OTPDigit(TextInputAction.next),
-                        OTPDigit(TextInputAction.done),
+                        SlideInUp(
+                          duration: const Duration(milliseconds: 1000),
+                          child: FadeIn(
+                            duration: const Duration(milliseconds: 1500),
+                            child: OTPDigit(TextInputAction.next),
+                          ),
+                        ),
+                        SlideInDown(
+                          duration: const Duration(milliseconds: 1000),
+                          child: FadeIn(
+                            duration: const Duration(milliseconds: 1500),
+                            child: OTPDigit(TextInputAction.next),
+                          ),
+                        ),
+                        SlideInUp(
+                          duration: const Duration(milliseconds: 1000),
+                          child: FadeIn(
+                            duration: const Duration(milliseconds: 1500),
+                            child: OTPDigit(TextInputAction.next),
+                          ),
+                        ),
+                        SlideInDown(
+                          duration: const Duration(milliseconds: 1000),
+                          child: FadeIn(
+                            duration: const Duration(milliseconds: 1500),
+                            child: OTPDigit(TextInputAction.next),
+                          ),
+                        ),
+                        SlideInUp(
+                          duration: const Duration(milliseconds: 1000),
+                          child: FadeIn(
+                            duration: const Duration(milliseconds: 1500),
+                            child: OTPDigit(TextInputAction.next),
+                          ),
+                        ),
+                        SlideInDown(
+                          duration: const Duration(milliseconds: 1000),
+                          child: FadeIn(
+                            duration: const Duration(milliseconds: 1500),
+                            child: OTPDigit(TextInputAction.done),
+                          ),
+                        ),
                       ],
                     ),
                   ),
+                  SizedBox(height: media.size.height * 0.05),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed(
-                          ResetPasswordScreen.routeName);
+                      Navigator.of(context)
+                          .pushReplacementNamed(ResetPasswordScreen.routeName);
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
@@ -87,7 +142,7 @@ class OTPScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
-                  Olives(),
+                  const Spacer(flex: 2),
                 ],
               ),
             ],
@@ -111,7 +166,7 @@ class OTPDigit extends StatelessWidget {
       width: media.size.width * 0.15,
       child: Card(
         elevation: 5,
-        color: const Color.fromRGBO(230, 240, 255, 1),
+        color: const Color.fromRGBO(205, 230, 255, 1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

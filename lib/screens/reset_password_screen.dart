@@ -1,8 +1,9 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/log_in_screen.dart';
 import '../widgets/logo.dart';
-import '../widgets/olives.dart';
+import '../widgets/my_upper_clipper.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   static const routeName = '/reset-password';
@@ -34,47 +35,69 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             top: media.padding.top,
             bottom: media.padding.bottom,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Stack(
             children: [
-              Logo(),
-              SizedBox(
-                height: media.size.height * 0.4,
-                child: Image.asset('assets/images/resetPassword.png'),
-              ),
-              FittedBox(
-                child: Text(
-                  'Enter your new password',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 19,
-                    fontWeight: FontWeight.w500,
-                    color: theme.colorScheme.primary,
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Transform.flip(
+                  flipX: true,
+                  flipY: true,
+                  child: ClipPath(
+                    clipper: MyUpperClipper(),
+                    child: Container(
+                      height: media.size.height * 0.2,
+                      width: double.infinity,
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                 ),
               ),
-              const Spacer(),
-              PasswordForm(),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).popAndPushNamed(LogInScreen.routeName);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Logo(),
+                  SizedBox(
+                    height: media.size.height * 0.4,
+                    child: SlideInLeft(
+                      duration: const Duration(milliseconds: 1000),
+                      child: Image.asset('assets/images/resetPassword.png'),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Reset',
-                  style: TextStyle(fontSize: 16),
-                ),
+                  FittedBox(
+                    child: Text(
+                      'Enter your new password',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'PollerOne',
+                        fontSize: 19,
+                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  PasswordForm(),
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .popAndPushNamed(LogInScreen.routeName);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: const Text(
+                      'Reset',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  const Spacer(flex: 3),
+                ],
               ),
-              const Spacer(),
-              Olives(),
             ],
           ),
         ),
@@ -90,6 +113,7 @@ class PasswordForm extends StatefulWidget {
 
 class _PasswordFormState extends State<PasswordForm> {
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -100,63 +124,69 @@ class _PasswordFormState extends State<PasswordForm> {
         key: _formKey,
         child: Column(
           children: [
-            TextFormField(
-              obscureText: _isVisible,
-              textAlignVertical: TextAlignVertical.center,
-              textInputAction: TextInputAction.next,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.only(left: 15),
-                prefixIcon: const Icon(Icons.lock),
-                prefixIconColor: theme.colorScheme.primary,
-                label: const Text('Password'),
-                suffixIcon: IconButton(
-                  onPressed: () => setState(() => _isVisible = !_isVisible),
-                  icon: Icon(
-                      _isVisible ? Icons.visibility : Icons.visibility_off),
+            SlideInRight(
+              duration: const Duration(milliseconds: 1000),
+              child: TextFormField(
+                obscureText: _isVisible,
+                textAlignVertical: TextAlignVertical.center,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.only(left: 15),
+                  prefixIcon: const Icon(Icons.lock),
+                  prefixIconColor: theme.colorScheme.primary,
+                  label: const Text('Password'),
+                  suffixIcon: IconButton(
+                    onPressed: () => setState(() => _isVisible = !_isVisible),
+                    icon: Icon(
+                        _isVisible ? Icons.visibility : Icons.visibility_off),
+                  ),
+                  suffixIconColor: theme.colorScheme.primary,
+                  isDense: true,
+                  filled: true,
+                  fillColor: Colors.transparent,
+                  counterText: '',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                 ),
-                suffixIconColor: theme.colorScheme.primary,
-                isDense: true,
-                filled: true,
-                fillColor: theme.appBarTheme.backgroundColor,
-                counterText: '',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
+                validator: (phoneNumber) {
+                  if (phoneNumber!.isEmpty) {
+                    return 'This field is required';
+                  }
+                },
               ),
-              validator: (phoneNumber) {
-                if (phoneNumber!.isEmpty) {
-                  return 'This field is required';
-                }
-              },
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              obscureText: _isVisible,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.only(left: 15),
-                prefixIcon: const Icon(Icons.lock),
-                prefixIconColor: theme.colorScheme.primary,
-                label: const Text('Confirm Password'),
-                suffixIcon: IconButton(
-                  onPressed: () => setState(() => _isVisible = !_isVisible),
-                  icon: Icon(
-                      _isVisible ? Icons.visibility : Icons.visibility_off),
+            SlideInLeft(
+              duration: const Duration(milliseconds: 1000),
+              child: TextFormField(
+                obscureText: _isVisible,
+                textAlignVertical: TextAlignVertical.center,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.only(left: 15),
+                  prefixIcon: const Icon(Icons.lock),
+                  prefixIconColor: theme.colorScheme.primary,
+                  label: const Text('Confirm Password'),
+                  suffixIcon: IconButton(
+                    onPressed: () => setState(() => _isVisible = !_isVisible),
+                    icon: Icon(
+                        _isVisible ? Icons.visibility : Icons.visibility_off),
+                  ),
+                  suffixIconColor: theme.colorScheme.primary,
+                  isDense: true,
+                  filled: true,
+                  fillColor: Colors.transparent,
+                  counterText: '',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                 ),
-                suffixIconColor: theme.colorScheme.primary,
-                isDense: true,
-                filled: true,
-                fillColor: theme.appBarTheme.backgroundColor,
-                counterText: '',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
+                validator: (phoneNumber) {
+                  if (phoneNumber!.isEmpty) {
+                    return 'This field is required';
+                  }
+                },
               ),
-              validator: (phoneNumber) {
-                if (phoneNumber!.isEmpty) {
-                  return 'This field is required';
-                }
-              },
             ),
           ],
         ),
