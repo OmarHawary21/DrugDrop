@@ -23,6 +23,7 @@ class _IntroScreensState extends State<IntroScreens> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: FadeIn(
         duration: const Duration(milliseconds: 2000),
@@ -51,18 +52,18 @@ class _IntroScreensState extends State<IntroScreens> {
                   'Order Medicine Online',
                   style: TextStyle(
                     fontFamily: 'PollerOne',
-                    fontSize: 24,
+                    fontSize: width * 0.05,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 Container(
-                  alignment: Alignment.center,
                   margin: const EdgeInsets.symmetric(vertical: 20),
                   child: Text(
                     'this is description.this is description.this is \ndescription.this is description.',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 16,
+                      fontSize: width * 0.04,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
@@ -88,18 +89,18 @@ class _IntroScreensState extends State<IntroScreens> {
                     'Easy Order Fast Delivery',
                     style: TextStyle(
                       fontFamily: 'PollerOne',
-                      fontSize: 24,
+                      fontSize: width * 0.05,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   Container(
-                    alignment: Alignment.center,
                     margin: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
                       'this is description.this is description.this is \ndescription.this is description.',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 16,
+                        fontSize: width * 0.04,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
@@ -124,18 +125,18 @@ class _IntroScreensState extends State<IntroScreens> {
                     'Huge  Medicines Variety',
                     style: TextStyle(
                       fontFamily: 'PollerOne',
-                      fontSize: 24,
+                      fontSize: width * 0.05,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   Container(
-                    alignment: Alignment.center,
                     margin: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
                       'this is description.this is description.this is \ndescription.this is description.',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 16,
+                        fontSize: width * 0.04,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),

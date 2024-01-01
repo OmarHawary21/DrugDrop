@@ -37,11 +37,11 @@ class CartScreen extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                 itemBuilder: (ctx, i) => CartItem(
-                  cart.items.values.toList()[i].id,
-                  cart.items.keys.toList()[i],
-                  cart.items.values.toList()[i].title,
-                  cart.items.values.toList()[i].price,
-                  cart.items.values.toList()[i].quantity,
+                  cart.items[i].id,
+                  cart.items[i].productId,
+                  cart.items[i].title,
+                  cart.items[i].price,
+                  cart.items[i].quantity,
                 ),
                 itemCount: cart.items.length,
               ),
@@ -64,7 +64,7 @@ class CartScreen extends StatelessWidget {
             ),
             Chip(
               label: Text(
-                '${cart.totalPrice.toStringAsFixed(2)} (S.P)',
+                '1600 (S.P)',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -106,7 +106,7 @@ class OrderButton extends StatefulWidget {
 class _OrderButtonState extends State<OrderButton> {
   @override
   Widget build(BuildContext context) {
-    bool _isDisabled = (widget.cart.totalPrice <= 0);
+    bool _isDisabled = (widget.cart.items.length <= 0);
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

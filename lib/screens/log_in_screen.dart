@@ -1,3 +1,4 @@
+import 'package:drug_drop/providers/categories_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
@@ -94,44 +95,41 @@ class LogInScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SlideInUp(
-                duration: const Duration(milliseconds: 1000),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Logo(),
-                    const Spacer(),
-                    Column(
-                      children: [
-                        FittedBox(
-                          child: Text(
-                            'Login',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'PollerOne',
-                              fontSize: 20,
-                              color: theme.colorScheme.primary,
-                            ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Logo(),
+                  const Spacer(),
+                  Column(
+                    children: [
+                      FittedBox(
+                        child: Text(
+                          'Login',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'PollerOne',
+                            fontSize: 20,
+                            color: theme.colorScheme.primary,
                           ),
                         ),
-                        FittedBox(
-                          child: Text(
-                            'sign in to continue',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 15,
-                              color: theme.colorScheme.primary,
-                            ),
+                      ),
+                      FittedBox(
+                        child: Text(
+                          'sign in to continue',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 15,
+                            color: theme.colorScheme.primary,
                           ),
                         ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Forms(),
-                    const Spacer(flex: 2),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Forms(),
+                  const Spacer(flex: 2),
+                ],
               ),
             ],
           ),
@@ -216,6 +214,7 @@ class _FormsState extends State<Forms> {
             const Duration(seconds: 5),
             onTimeout: () => throw Exception('Something went wrong.'),
           );
+      Provider.of<CategoriesProvider>(context, listen: false).fetchCategories();
       Navigator.of(context).pushNamedAndRemoveUntil(
           HomeBottomBar.routeName, (Route<dynamic> route) => false);
     } catch (error) {

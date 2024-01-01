@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(
-      const Duration(seconds: 3),
+      const Duration(seconds: 2),
       () {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: FadeIn(
-        duration: Duration(milliseconds: 2000),
+        duration: const Duration(milliseconds: 1000),
         child: Container(
           alignment: Alignment.center,
           width: double.infinity,
@@ -53,26 +53,27 @@ class _SplashScreenState extends State<SplashScreen>
             color: Theme.of(context).colorScheme.primary,
           ),
           child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'DrugDrop',
-                  style: TextStyle(
-                    fontFamily: 'PollerOne',
-                    fontSize: 30,
-                    color: Color.fromRGBO(255, 252, 252, 1),
-                  ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                'DrugDrop',
+                style: TextStyle(
+                  fontFamily: 'PollerOne',
+                  fontSize: 30,
+                  color: Color.fromRGBO(255, 252, 252, 1),
                 ),
-                const SizedBox(width: 3),
-                Transform.rotate(
-                  angle: 30 * pi / 180,
-                  child: const Icon(
-                    MyFlutterApp.pills,
-                    color: Color.fromRGBO(68, 191, 219, 1),
-                  ),
+              ),
+              const SizedBox(width: 3),
+              Transform.rotate(
+                angle: 30 * pi / 180,
+                child: const Icon(
+                  MyFlutterApp.pills,
+                  color: Color.fromRGBO(68, 191, 219, 1),
                 ),
-              ]),
+              ),
+            ],
+          ),
         ),
       ),
     );

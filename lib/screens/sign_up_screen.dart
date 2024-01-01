@@ -378,9 +378,9 @@ class _signUpFormState extends State<_signUpForm> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                  HomeBottomBar.routeName, (Route<dynamic> route) => false),
-              // onPressed: _submit,
+              // onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+              //     HomeBottomBar.routeName, (Route<dynamic> route) => false),
+              onPressed: _submit,
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),

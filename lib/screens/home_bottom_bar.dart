@@ -7,6 +7,7 @@ import 'categories_screen.dart';
 import 'cart_screen.dart';
 import 'orders_screen.dart';
 import 'search-screen.dart';
+import 'favorites_screen.dart';
 import '../providers/cart_provider.dart';
 
 class HomeBottomBar extends StatefulWidget {
@@ -32,9 +33,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
     },
     {
       'title': 'Favorites',
-      'screen': const Center(
-        child: Text('Upcoming'),
-      ),
+      'screen': FavoritesScreen(),
     },
     {
       'title': 'Profile',
@@ -68,7 +67,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
               backgroundColor: Colors.transparent,
               // alignment: Alignment.bottomRight,
               offset: const Offset(-2, 4),
-              label: Text(cart.productCount.toString()),
+              label: Text(cart.items.length.toString()),
               child: ch,
             ),
             child: IconButton(

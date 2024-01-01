@@ -1,66 +1,31 @@
-import '../providers/cart_provider.dart';
-import '../providers/drug_data.dart';
-
-import '../providers/drugs_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DrugDetailsScreen extends StatelessWidget {
-  static const routeName = '/drug-details';
-  bool isPressed = false;
-//show dialog for quantity
-  // void _showDialog(BuildContext context, String content) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (_) => AlertDialog(
-  //       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-  //       title: Center(
-  //         child: Text(
-  //           'Indicate Your Quantity',
-  //           style: TextStyle(color: Theme.of(context).colorScheme.background),
-  //         ),
-  //       ),
-  //       content: Row(
-  //         crossAxisAlignment: CrossAxisAlignment.center,
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           IconButton(
-  //             onPressed: () {},
-  //             icon: Icon(
-  //               Icons.remove_circle_rounded,
-  //               color: Theme.of(context).colorScheme.primary,
-  //             ),
-  //           ),
-  //           const Text('quantity'),
-  //           IconButton(
-  //             onPressed: () {},
-  //             icon: Icon(
-  //               Icons.add_circle_rounded,
-  //               color: Theme.of(context).colorScheme.primary,
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //       actions: [
-  //         ElevatedButton(
-  //           onPressed: () {},
-  //           child: const Text('Add to cart'),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
+import '../providers/drugs_provider.dart';
+import '../providers/cart_provider.dart';
+import '../providers/tags_provider.dart';
 
-  // use this to add description in container
+class DrugDetailsScreen extends StatefulWidget {
+  static const routeName = '/drug-details';
+
+  @override
+  State<DrugDetailsScreen> createState() => _DrugDetailsScreenState();
+}
+
+class _DrugDetailsScreenState extends State<DrugDetailsScreen> {
+  bool isPressed = false;
+
+//show dialog for quantity
   Widget buildSectionTitle(BuildContext context, String text) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Text(
         text,
         style: TextStyle(
-            fontSize: 20,
-            color: Theme.of(context).colorScheme.background,
-            fontWeight: FontWeight.bold),
+          fontSize: 20,
+          color: Theme.of(context).colorScheme.background,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -68,28 +33,27 @@ class DrugDetailsScreen extends StatelessWidget {
   //this container for adding description
   Widget buildContainer(Widget child) {
     return Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
-        height: 200,
-        width: 300,
-        child: child);
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
+      height: 200,
+      width: 300,
+      child: child,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     var theme = Theme.of(context).colorScheme;
-    final drugId =
-        ModalRoute.of(context)!.settings.arguments as int; // is the id!
+    final drugId = ModalRoute.of(context)!.settings.arguments as int;
     final loadedDrug =
-        Provider.of<DrugsProvider>(context, listen: false).findDrugById(drugId);
+        Provider.of<TagsProvider>(context, listen: false).findDrugById(drugId);
     final scaffold = ScaffoldMessenger.of(context);
-    // final drug = Provider.of<Drug>(context, listen: false);
     final cart = Provider.of<CartProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -98,7 +62,7 @@ class DrugDetailsScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Container(
+          SizedBox(
             height: 300,
             child: Image.network(
               loadedDrug.imageUrl,
@@ -159,7 +123,9 @@ class DrugDetailsScreen extends StatelessWidget {
                           vertical: 10,
                           horizontal: 5,
                         ),
-                        child: Text(loadedDrug.description),
+                        child: Text(
+                          loadedDrug.description,
+                        ),
                       ),
                     ),
                   ),
@@ -174,18 +140,12 @@ class DrugDetailsScreen extends StatelessWidget {
         children: [
           FloatingActionButton(
             backgroundColor: theme.primary,
-            onPressed: () async {
-              try {
-                await Provider.of<Drug>(context, listen: false)
-                    .toggleFavoriteStatus();
-              } catch (error) {
-                scaffold.showSnackBar(SnackBar(
-                  content: Text(
-                    'Could not added to favorite!',
-                    textAlign: TextAlign.center,
-                  ),
-                ));
-              }
+            onPressed: () {
+              loadedDrug.isFavorite
+                  ? Provider.of<DrugsProvider>(context)
+                      .removeFromFavorites(loadedDrug.id)
+                  : Provider.of<DrugsProvider>(context)
+                      .addToFavorites(loadedDrug.id);
             },
             child: Icon(
               loadedDrug.isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -198,7 +158,11 @@ class DrugDetailsScreen extends StatelessWidget {
             backgroundColor: theme.primary,
             onPressed: () {
               cart.addToCart(
-                  loadedDrug.id.toString(), loadedDrug.tradeName, loadedDrug.price.toDouble());
+                loadedDrug.id,
+                loadedDrug.tradeName,
+                loadedDrug.price,
+                loadedDrug.quantity,
+              );
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -226,7 +190,7 @@ class DrugDetailsScreen extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

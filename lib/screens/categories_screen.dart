@@ -17,18 +17,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   var _isLoading = false;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<CategoriesProvider>(context, listen: false)
-          .fetchCategories()
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
+      setState(() => _isLoading = true);
+      await Provider.of<CategoriesProvider>(context)
+          .fetchCategories().timeout(const Duration(seconds: 3));
+      setState(() => _isLoading = false);
     }
     _isInit = false;
     super.didChangeDependencies();

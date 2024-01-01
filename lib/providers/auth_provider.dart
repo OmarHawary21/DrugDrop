@@ -10,14 +10,14 @@ class AuthProvider with ChangeNotifier {
   String _token = '';
 
   String get token {
-    if (_token.isNotEmpty){
+    if (_token.isNotEmpty) {
       return _token;
     }
     return '';
   }
 
   bool get isAuth {
-    return token.isNotEmpty;
+    return token != '';
   }
 
   Future<void> login(String phoneNumber, String password) async {
@@ -37,7 +37,6 @@ class AuthProvider with ChangeNotifier {
       if (responseData == null) {
         throw Exception();
       }
-      print(responseData);
       if (responseData['Status'] == 'Failed') {
         throw Exception('Failed');
       }
@@ -75,6 +74,24 @@ class AuthProvider with ChangeNotifier {
     } catch (error) {
       rethrow;
     }
+  }
+
+  Future<void> logout() async {
+    final url = Uri.parse('http://$host/api/user/logout');
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final data = json.decode(response.body);
+    } catch (error) {
+      rethrow;
+    }
+    _token = '';
+    notifyListeners();
   }
   
   Future<void> forgotPassword(String phoneNumber) async {

@@ -54,8 +54,6 @@ class CategroyItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context)
                 .pushNamed(TagsScreen.routeName, arguments: id);
-            Provider.of<TagsProvider>(context, listen: false)
-                .fetchAndSetDrugs(id);
           },
         ),
       ),

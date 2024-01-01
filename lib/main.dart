@@ -13,8 +13,10 @@ import 'screens/intro_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/orders_screen.dart';
 import 'screens/search-screen.dart';
-import 'screens/drug-details-screen.dart';
+import 'screens/drug_details_screen.dart';
 import 'screens/tags_screen.dart';
+import 'screens/favorites_screen.dart';
+import 'screens/see_all_screen.dart';
 
 import 'providers/auth_provider.dart';
 import 'providers/cart_provider.dart';
@@ -49,8 +51,9 @@ class MyApp extends StatelessWidget {
           create: (_) => TagsProvider(''),
           update: (context, auth, previous) => TagsProvider(auth.token),
         ),
-        ChangeNotifierProvider.value(
-          value: CategoriesProvider(),
+        ChangeNotifierProxyProvider<AuthProvider, CategoriesProvider>(
+          create: (_) => CategoriesProvider(''),
+          update: (context, auth, previous) => CategoriesProvider(auth.token),
         ),
         ChangeNotifierProxyProvider<AuthProvider, DrugsProvider>(
           create: (_) => DrugsProvider(''),
@@ -98,8 +101,8 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          initialRoute: SplashScreen.routeName,
-          // initialRoute: auth.isAuth ? HomeBottomBar.routeName : SplashScreen.routeName,
+          // initialRoute: SplashScreen.routeName,
+          initialRoute: auth.isAuth ? HomeBottomBar.routeName : SplashScreen.routeName,
           routes: {
             SplashScreen.routeName: (_) => SplashScreen(),
             LogInScreen.routeName: (_) => LogInScreen(),
@@ -114,7 +117,9 @@ class MyApp extends StatelessWidget {
             CategoriesScreen.routeName: (_) => CategoriesScreen(),
             SearchScreen.routeName: (_) => SearchScreen(),
             DrugDetailsScreen.routeName: (_) => DrugDetailsScreen(),
-            TagsScreen.routeName: (_) => TagsScreen(1),
+            TagsScreen.routeName: (_) => TagsScreen(),
+            FavoritesScreen.routeName: (_) => FavoritesScreen(),
+            SeeAllScreen.routeName: (_) => SeeAllScreen(),
           },
         ),
       ),

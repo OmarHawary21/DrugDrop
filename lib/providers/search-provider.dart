@@ -1,4 +1,4 @@
-import '../providers/category.dart';
+import '../models/category.dart';
 import 'package:flutter/material.dart';
 
 class SearchItem with ChangeNotifier {

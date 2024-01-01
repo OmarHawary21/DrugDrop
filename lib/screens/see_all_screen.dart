@@ -2,39 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'cart_screen.dart';
-import '../widgets/tag_item.dart';
 import '../providers/tags_provider.dart';
-import '../providers/categories_provider.dart';
 import '../providers/cart_provider.dart';
+import '../widgets/drug_card.dart';
 
-class TagsScreen extends StatefulWidget {
-  static const routeName = '/tags';
+class SeeAllScreen extends StatefulWidget {
+  static const routeName = '/see-all';
 
   @override
-  State<TagsScreen> createState() => _TagsScreenState();
+  State<SeeAllScreen> createState() => _SeeAllScreenState();
 }
 
-class _TagsScreenState extends State<TagsScreen> {
+class _SeeAllScreenState extends State<SeeAllScreen> {
+  bool _isInit = false;
   bool _isLoading = false;
-  late final catId = ModalRoute.of(context)?.settings.arguments as int;
+  late final tagId = ModalRoute.of(context)?.settings.arguments as int;
 
   @override
   void didChangeDependencies() async {
-    setState(() => _isLoading = true);
-    await Provider.of<TagsProvider>(context, listen: false)
-        .fetchAndSetTags(catId);
-    setState(() => _isLoading = false);
+    if (!_isInit) {
+      setState(() => _isLoading = true);
+      await Provider.of<TagsProvider>(context).fetchAndSetTags(tagId);
+      setState(() => _isLoading = false);
+    }
+    _isInit = true;
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    final catData = Provider.of<CategoriesProvider>(context).findById(catId);
-    final tags = Provider.of<TagsProvider>(context, listen: false).tags;
+    final tag =
+        Provider.of<TagsProvider>(context).findTagById(tagId.toString());
+    final drugs = tag.drugs;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(catData.name),
+        title: Text(tag.name),
         actions: [
           Consumer<CartProvider>(
             builder: (_, cart, ch) => Badge(
@@ -66,18 +69,18 @@ class _TagsScreenState extends State<TagsScreen> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : ListView.builder(
-              itemBuilder: (_, index) => Column(
-                children: [
-                  TagItem(tags[index].id, tags[index].name, tags[index].drugs),
-                  Divider(
-                    color: Theme.of(context).colorScheme.primary,
-                    indent: 40,
-                    endIndent: 40,
-                  ),
-                ],
+          : GridView.builder(
+              itemBuilder: (_, index) => DrugCard(
+                drugs[index].id,
+                drugs[index].tradeName,
+                drugs[index].price,
+                drugs[index].imageUrl,
+                drugs[index].isFavorite,
               ),
-              itemCount: tags.length,
+              itemCount: drugs.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
             ),
     );
   }

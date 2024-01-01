@@ -1,19 +1,18 @@
 import '../providers/drug_data.dart';
-import '../screens/drug-details-screen.dart';
+import '../screens/drug_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DrugItem extends StatelessWidget {
-  int id;
-  String imageUrl;
-  String price;
-  String tradeName;
+  final int id;
+  final String imageUrl;
+  final String price;
+  final String tradeName;
 
   DrugItem(this.id, this.imageUrl, this.price, this.tradeName);
 
   @override
   Widget build(BuildContext context) {
-    print('hiiiiiiiiiiiiiiiiiiiiii DrugItem');
     var theme = Theme.of(context);
     var media = MediaQuery.of(context).size;
     final scaffold = ScaffoldMessenger.of(context);
@@ -23,7 +22,7 @@ class DrugItem extends StatelessWidget {
         color: theme.colorScheme.secondary,
       ),
       padding: const EdgeInsets.all(10),
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       child: Column(
         children: [
           GestureDetector(
