@@ -1,5 +1,5 @@
-//import '/translations/locale_keys.g.dart';
-//import 'package:easy_localization/easy_localization.dart';
+import '/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '/widgets/profile_item.dart';
 
@@ -18,11 +18,12 @@ class ProfileScreen extends StatelessWidget {
           backgroundColor: theme.background,
         ),
         SizedBox(height: media.height * 0.04),
-        ProfileItem('Name', 'Taghreed Sweideh', Icons.person),
+        ProfileItem(LocaleKeys.name.tr(), 'Taghreed Sweideh', Icons.person),
         SizedBox(height: media.height * 0.02),
-        ProfileItem('Phone', '0957515618', Icons.phone),
+        ProfileItem(LocaleKeys.phone_number.tr(), '0957515618', Icons.phone),
         SizedBox(height: media.height * 0.02),
-        ProfileItem('Address', 'Damascus,Syria', Icons.location_pin),
+        ProfileItem(
+            LocaleKeys.address.tr(), 'Damascus,Syria', Icons.location_pin),
         SizedBox(height: media.height * 0.02),
         // ProfileItem('Email', 'taghreedsweideh@gmail.com', Icons.mail),
         // SizedBox(height: media.height * 0.02),

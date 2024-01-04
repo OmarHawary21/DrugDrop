@@ -1,15 +1,13 @@
-import '../providers/drug_data.dart';
+import 'package:flutter/material.dart';
 
-class Tag {
+class Categories with ChangeNotifier {
   final int id;
   final String en_name;
   final String ar_name;
-  List<Drug> drugs;
 
-  Tag({
+  Categories({
     required this.id,
     required this.en_name,
     required this.ar_name,
-    required this.drugs,
   });
 }

@@ -1,3 +1,7 @@
+import 'package:drug_drop2/providers/notification_provider.dart';
+
+import '/translations/codegen_loader.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,10 +17,11 @@ import 'screens/intro_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/orders_screen.dart';
 import 'screens/search-screen.dart';
-import 'screens/drug_details_screen.dart';
+import 'screens/drug-details-screen.dart';
 import 'screens/tags_screen.dart';
-import 'screens/favorites_screen.dart';
-import 'screens/see_all_screen.dart';
+import 'screens/notifications_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/settings_screen.dart';
 
 import 'providers/auth_provider.dart';
 import 'providers/cart_provider.dart';
@@ -24,11 +29,25 @@ import 'providers/orders_provider.dart';
 import 'providers/tags_provider.dart';
 import 'providers/categories_provider.dart';
 import 'providers/drugs_provider.dart';
+import 'providers/search-provider.dart';
 
-const String host = '192.168.43.239';
-
-void main() {
-  runApp(const MyApp());
+const String host = '127.0.0.1:8000';
+const String token = '1|RcIInMNgjhllOGmcNyuDBEepf5LoSieeLsI7gDtha05d41a6';
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  runApp(
+    EasyLocalization(
+      path: 'assets/translations/',
+      supportedLocales: [
+        Locale('en'),
+        Locale('ar'),
+      ],
+      fallbackLocale: Locale('en'),
+      assetLoader: CodegenLoader(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -51,17 +70,23 @@ class MyApp extends StatelessWidget {
           create: (_) => TagsProvider(''),
           update: (context, auth, previous) => TagsProvider(auth.token),
         ),
-        ChangeNotifierProxyProvider<AuthProvider, CategoriesProvider>(
-          create: (_) => CategoriesProvider(''),
-          update: (context, auth, previous) => CategoriesProvider(auth.token),
+        ChangeNotifierProvider.value(
+          value: CategoriesProvider(),
         ),
         ChangeNotifierProxyProvider<AuthProvider, DrugsProvider>(
           create: (_) => DrugsProvider(''),
           update: (context, auth, previous) => DrugsProvider(auth.token),
         ),
+        ChangeNotifierProvider(
+          create: (_) => SearchProvider(),
+        ),
+        ChangeNotifierProvider(create: (_) => NotificationProvider())
       ],
       child: Consumer<AuthProvider>(
         builder: (ctx, auth, child) => MaterialApp(
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
+          locale: context.locale,
           debugShowCheckedModeBanner: false,
           title: 'DrugDrop',
           theme: ThemeData(
@@ -101,8 +126,8 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          // initialRoute: SplashScreen.routeName,
-          initialRoute: auth.isAuth ? HomeBottomBar.routeName : SplashScreen.routeName,
+          initialRoute: SplashScreen.routeName,
+          // initialRoute: auth.isAuth ? HomeBottomBar.routeName : SplashScreen.routeName,
           routes: {
             SplashScreen.routeName: (_) => SplashScreen(),
             LogInScreen.routeName: (_) => LogInScreen(),
@@ -111,15 +136,16 @@ class MyApp extends StatelessWidget {
             ForgotPasswordScreen.routeName: (_) => ForgotPasswordScreen(),
             OTPScreen.routeName: (_) => OTPScreen(),
             ResetPasswordScreen.routeName: (_) => ResetPasswordScreen(),
-            HomeBottomBar.routeName: (_) => HomeBottomBar(),
+            HomeBottomBar.routeName: (_) => HomeBottomBar(auth.userId),
             CartScreen.routeName: (_) => CartScreen(),
             OrdersScreen.routeName: (_) => OrdersScreen(),
             CategoriesScreen.routeName: (_) => CategoriesScreen(),
             SearchScreen.routeName: (_) => SearchScreen(),
             DrugDetailsScreen.routeName: (_) => DrugDetailsScreen(),
             TagsScreen.routeName: (_) => TagsScreen(),
-            FavoritesScreen.routeName: (_) => FavoritesScreen(),
-            SeeAllScreen.routeName: (_) => SeeAllScreen(),
+            SettingsScreen.routeName: (_) => SettingsScreen(),
+            ProfileScreen.routeName: (_) => ProfileScreen(),
+            NotificationsScreen.routeName: (_) => NotificationsScreen(),
           },
         ),
       ),

@@ -1,3 +1,7 @@
+import 'package:drug_drop2/main.dart';
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 import '../providers/cart_provider.dart';
 import '../providers/drug_data.dart';
 
@@ -37,7 +41,7 @@ class _DrugDetailsScreenState extends State<DrugDetailsScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Center(
           child: Text(
-            'Indicate Your Quantity',
+            LocaleKeys.indicate_your_quantity.tr(),
             style: TextStyle(color: Theme.of(context).colorScheme.background),
           ),
         ),
@@ -80,7 +84,7 @@ class _DrugDetailsScreenState extends State<DrugDetailsScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'Added item to cart!',
+                    '${LocaleKeys.added_item_to_cart.tr()}!',
                   ),
                   duration: Duration(seconds: 2),
                 ),
@@ -89,7 +93,7 @@ class _DrugDetailsScreenState extends State<DrugDetailsScreen> {
                 _quantityCounter = 0;
               });
             },
-            child: const Text('Add to cart'),
+            child: Text(LocaleKeys.add_to_cart.tr()),
           )
         ],
       ),
@@ -132,12 +136,12 @@ class _DrugDetailsScreenState extends State<DrugDetailsScreen> {
     final drugId =
         ModalRoute.of(context)!.settings.arguments as int; // is the id!
     final loadedDrug = Provider.of<DrugsProvider>(context, listen: false).item;
-    print(loadedDrug.id);
-    print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-    print(loadedDrug.imageUrl);
+    //print(loadedDrug.id);
+    //print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+    //print(loadedDrug.imageUrl);
     final scaffold = ScaffoldMessenger.of(context);
     // final drug = Provider.of<Drug>(context, listen: false);
-    print('asaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa${loadedDrug.imageUrl}');
+    //print('asaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa${loadedDrug.imageUrl}');
     return Scaffold(
       appBar: AppBar(
         title: Text(loadedDrug.tradeName!),
@@ -152,7 +156,7 @@ class _DrugDetailsScreenState extends State<DrugDetailsScreen> {
               child: loadedDrug.imageUrl == 'null'
                   ? Image.asset('assets/images/Medical prescription-rafiki.png')
                   : Image.network(
-                      'http://192.168.43.239/${loadedDrug.imageUrl}',
+                      'http://${host}/${loadedDrug.imageUrl}',
                       width: double.infinity,
                       fit: BoxFit.cover,
                     ),
@@ -179,7 +183,7 @@ class _DrugDetailsScreenState extends State<DrugDetailsScreen> {
                           color: theme.secondary,
                         ),
                         child: Text(
-                          'Price: ${loadedDrug.price} s.p',
+                          '${LocaleKeys.price.tr()}: ${loadedDrug.price} s.p',
                           style: TextStyle(
                               color: theme.primary,
                               fontFamily: 'PollerOne',
@@ -211,7 +215,7 @@ class _DrugDetailsScreenState extends State<DrugDetailsScreen> {
                           color: theme.secondary,
                         ),
                         child: Text(
-                          'Quantity: ${loadedDrug.quantity} ',
+                          '${LocaleKeys.quantity.tr()}: ${loadedDrug.quantity} ',
                           style: TextStyle(
                               color: theme.primary,
                               fontFamily: 'PollerOne',
@@ -223,7 +227,7 @@ class _DrugDetailsScreenState extends State<DrugDetailsScreen> {
                   ),
                 ),
                 SizedBox(height: 10),
-                buildSectionTitle(context, 'Drug Description'),
+                buildSectionTitle(context, LocaleKeys.drug_description.tr()),
                 buildContainer(
                   SingleChildScrollView(
                     child: Card(
@@ -255,7 +259,7 @@ class _DrugDetailsScreenState extends State<DrugDetailsScreen> {
               } catch (error) {
                 scaffold.showSnackBar(SnackBar(
                   content: Text(
-                    'Could not added to favorite!',
+                    '${LocaleKeys.couldnt_add_favorite.tr()}!',
                     textAlign: TextAlign.center,
                   ),
                 ));

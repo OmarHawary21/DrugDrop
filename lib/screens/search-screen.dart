@@ -1,3 +1,8 @@
+import 'package:drug_drop2/main.dart';
+import 'package:drug_drop2/providers/drugs_provider.dart';
+import 'package:drug_drop2/providers/tags_provider.dart';
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,6 +50,8 @@ class _SearchScreenState extends State<SearchScreen> {
           showCursor: true,
           decoration: InputDecoration(
             isDense: true,
+            filled: true,
+            fillColor: Colors.transparent,
             contentPadding: EdgeInsets.all(10),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),
@@ -64,8 +71,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 onPressed: () {
                   updateData(searchData['type']!, searchData['value']!,
                       searchData['category']!);
+                  Navigator.pop(context);
                 },
-                child: const Text('search'),
+                child: Text(LocaleKeys.search_imperative.tr()),
               ),
             ],
           )
@@ -96,6 +104,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Locale currentLocale = Localizations.localeOf(context);
     var theme = Theme.of(context).colorScheme;
     var media = MediaQuery.of(context).size;
     final searchResult = Provider.of<SearchProvider>(context);
@@ -117,7 +126,7 @@ class _SearchScreenState extends State<SearchScreen> {
               suffixIcon: IconButton(
                   icon: Icon(Icons.filter_list_alt),
                   onPressed: () {
-                    _showDialog(context, 'search for category');
+                    _showDialog(context, LocaleKeys.search_for_category.tr());
                   }),
               isDense: true,
               filled: true,
@@ -127,7 +136,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 borderRadius: BorderRadius.circular(30.0),
                 borderSide: BorderSide(width: 0.8, color: theme.primary),
               ),
-              hintText: 'Search Medicine or Category',
+              hintText: LocaleKeys.search_medicine_or_category.tr(),
               prefixIcon: Icon(
                 Icons.search,
                 size: 30.0,
@@ -176,16 +185,25 @@ class _SearchScreenState extends State<SearchScreen> {
                 )
               : (medicines.length == 0 && categories.length == 0)
                   ? Center(
-                      child: Text('No Such Item'),
+                      child: Text(LocaleKeys.no_such_item.tr()),
                     )
-                  : searchData['type'] == 'Category'
+                  : searchData['type'] == LocaleKeys.category.tr()
                       ? ListView.builder(
                           itemCount: categories.length,
                           itemBuilder: (_, i) => Column(
                             children: [
-                              CategroyItem(
-                                categories[i].id,
-                                categories[i].name,
+                              InkWell(
+                                onTap: () {
+                                  Provider.of<TagsProvider>(context,
+                                          listen: false)
+                                      .fetchAndSetTags(categories[i].id);
+                                },
+                                child: CategroyItem(
+                                  categories[i].id,
+                                  currentLocale.languageCode == 'en'
+                                      ? categories[i].en_name
+                                      : categories[i].ar_name,
+                                ),
                               ),
                             ],
                           ),
@@ -212,10 +230,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                     ? Image.asset(
                                         'assets/images/Medical prescription-rafiki.png')
                                     : Image.network(
-                                        medicines[index].imageUrl!,
+                                        'http://${host}/${medicines[index].imageUrl}',
                                         fit: BoxFit.cover,
                                       ),
-                                onTap: () {
+                                onTap: () async {
+                                  await Provider.of<DrugsProvider>(context,
+                                          listen: false)
+                                      .fetchDrug(medicines[index].id!);
                                   Navigator.of(context).pushNamed(
                                     DrugDetailsScreen.routeName,
                                     arguments: medicines[index].id,

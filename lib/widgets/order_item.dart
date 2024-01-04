@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -26,7 +28,7 @@ class _OrderItemState extends State<OrderItem> {
         children: [
           ListTile(
             title: Text(
-              'Total: ${widget.orderItem.total}   S.P',
+              '${LocaleKeys.total_price.tr()}: ${widget.orderItem.total} ${LocaleKeys.sp.tr()}',
               style: TextStyle(
                 color: primary,
                 fontFamily: 'Poppins',
@@ -34,7 +36,7 @@ class _OrderItemState extends State<OrderItem> {
               ),
             ),
             subtitle: Text(
-              'Date: ${DateFormat('hh:mm  dd/MM/yyyy').format(widget.orderItem.dateTime)}',
+              '${LocaleKeys.date.tr()}: ${DateFormat('hh:mm  dd/MM/yyyy').format(widget.orderItem.dateTime)}',
               style: TextStyle(
                 color: primary,
               ),
@@ -54,7 +56,11 @@ class _OrderItemState extends State<OrderItem> {
           if (_expanded)
             Container(
               padding: const EdgeInsets.all(10),
-              height: min(widget.orderItem.products.length * MediaQuery.of(context).size.height * 0.35, MediaQuery.of(context).size.height * 0.35),
+              height: min(
+                  widget.orderItem.products.length *
+                      MediaQuery.of(context).size.height *
+                      0.35,
+                  MediaQuery.of(context).size.height * 0.35),
               child: ListView(
                 children: widget.orderItem.products
                     .map(
@@ -77,7 +83,7 @@ class _OrderItemState extends State<OrderItem> {
                                 Row(
                                   children: [
                                     Text(
-                                      'Price: ${prod.price}  S.P',
+                                      '${LocaleKeys.price.tr()}: ${prod.price}  ${LocaleKeys.sp.tr()}',
                                       style: TextStyle(
                                         color: Colors.grey.shade700,
                                         fontSize: 14,

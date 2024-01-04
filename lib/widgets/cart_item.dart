@@ -1,3 +1,5 @@
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,20 +55,20 @@ class CartItem extends StatelessWidget {
               color: theme.colorScheme.error,
             ),
             actionsAlignment: MainAxisAlignment.spaceAround,
-            title: const Text('Are you sure?'),
-            content: const Text('This will delete this item from the cart'),
+            title: Text('${LocaleKeys.are_you_sure.tr()}?'),
+            content: Text(LocaleKeys.this_will_delete_from_cart.tr()),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(ctx).pop(false);
                 },
-                child: const Text('NO'),
+                child: Text(LocaleKeys.no.tr()),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(ctx).pop(true);
                 },
-                child: const Text('YES'),
+                child: Text(LocaleKeys.yes.tr()),
               ),
             ],
           ),
@@ -95,7 +97,8 @@ class CartItem extends StatelessWidget {
               ),
             ),
             title: Text(title),
-            subtitle: Text('Price for one: $price (S.P)'),
+            subtitle: Text(
+                '${LocaleKeys.price.tr()}: $price (${LocaleKeys.sp.tr()})'),
             trailing: Text(
               'x $quantity',
               style: const TextStyle(fontSize: 12),

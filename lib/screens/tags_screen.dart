@@ -5,7 +5,6 @@ import 'cart_screen.dart';
 import '../widgets/tag_item.dart';
 import '../providers/tags_provider.dart';
 import '../providers/categories_provider.dart';
-import '../providers/cart_provider.dart';
 
 class TagsScreen extends StatefulWidget {
   static const routeName = '/tags';
@@ -15,70 +14,64 @@ class TagsScreen extends StatefulWidget {
 }
 
 class _TagsScreenState extends State<TagsScreen> {
-  bool _isLoading = false;
-  late final catId = ModalRoute.of(context)?.settings.arguments as int;
-
+  var _isInit = true;
+  var _isLoading = false;
   @override
-  void didChangeDependencies() async {
-    setState(() => _isLoading = true);
-    await Provider.of<TagsProvider>(context, listen: false)
-        .fetchAndSetTags(catId);
-    setState(() => _isLoading = false);
+  void didChangeDependencies() {
+    if (_isInit) {
+      final catId = ModalRoute.of(context)?.settings.arguments as int;
+      _isLoading = true;
+      Provider.of<TagsProvider>(context, listen: false)
+          .fetchAndSetTags(catId)
+          .then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    final catId = ModalRoute.of(context)?.settings.arguments as int;
     final catData = Provider.of<CategoriesProvider>(context).findById(catId);
     final tags = Provider.of<TagsProvider>(context, listen: false).tags;
-
+    Locale currentLocale = Localizations.localeOf(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(catData.name),
+        title: Text(currentLocale.languageCode == 'en'
+            ? catData.en_name
+            : catData.ar_name),
         actions: [
-          Consumer<CartProvider>(
-            builder: (_, cart, ch) => Badge(
-              backgroundColor: Colors.transparent,
-              offset: const Offset(-2, 4),
-              label: Text(cart.items.length.toString()),
-              child: ch,
-            ),
-            child: IconButton(
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(CartScreen.routeName),
-              icon: const Icon(
-                Icons.shopping_cart,
-              ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(CartScreen.routeName);
+            },
+            icon: Icon(
+              Icons.shopping_cart,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.settings,
-              ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.settings,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemBuilder: (_, index) => Column(
-                children: [
-                  TagItem(tags[index].id, tags[index].name, tags[index].drugs),
-                  Divider(
-                    color: Theme.of(context).colorScheme.primary,
-                    indent: 40,
-                    endIndent: 40,
-                  ),
-                ],
-              ),
-              itemCount: tags.length,
-            ),
+      body: ListView.builder(
+        itemBuilder: (_, index) => TagItem(
+            tags[index].id,
+            currentLocale.languageCode == 'en'
+                ? tags[index].en_name
+                : tags[index].ar_name,
+            tags[index].drugs),
+        itemCount: tags.length,
+      ),
     );
   }
 }

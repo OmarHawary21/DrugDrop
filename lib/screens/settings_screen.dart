@@ -1,4 +1,6 @@
-//import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart';
+import '/translations/locale_keys.g.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,11 +47,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pushNamedAndRemoveUntil(context,
                       LogInScreen.routeName, (Route<dynamic> route) => false);
                 },
-                child: const Text('Yes'),
+                child: Text(LocaleKeys.yes.tr()),
               ),
               ElevatedButton(
-                onPressed: () {},
-                child: const Text('NO'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(LocaleKeys.no.tr()),
               ),
             ],
           )
@@ -66,7 +70,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.only(left: 10),
-          child: Text('Settings'),
+          child: Text(LocaleKeys.settings.tr()),
         ),
       ),
       body: Column(
@@ -75,7 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Account Settings',
+              LocaleKeys.account_settings.tr(),
               style: TextStyle(
                 fontSize: 16,
                 color: theme.primary.withOpacity(0.6),
@@ -88,7 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: Icon(Icons.chevron_right_rounded),
               iconColor: theme.primary,
               title: Text(
-                'Edit your profile',
+                LocaleKeys.edit_your_profile.tr(),
                 style: TextStyle(color: theme.primary),
               ),
               onTap: () {
@@ -100,7 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'App Settings',
+              LocaleKeys.app_settings.tr(),
               style: TextStyle(
                 fontSize: 16,
                 color: theme.primary.withOpacity(0.6),
@@ -113,7 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: Icon(Icons.chevron_right_rounded),
               iconColor: theme.primary,
               title: Text(
-                'Language',
+                LocaleKeys.language.tr(),
                 style: TextStyle(color: theme.primary),
               ),
               subtitle: _language == language[0]
@@ -136,8 +140,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             activeColor: theme.primary,
                             value: language[0],
                             groupValue: _language,
-                            onChanged: (value) {
-                              // await context.setLocale(Locale('en'));
+                            onChanged: (value) async {
+                              await context.setLocale(Locale('en'));
                               setState(() {
                                 _language = value.toString();
                               });
@@ -153,8 +157,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             activeColor: theme.primary,
                             value: language[1],
                             groupValue: _language,
-                            onChanged: (value) {
-                              // await context.setLocale(Locale('ar'));
+                            onChanged: (value) async {
+                              await context.setLocale(Locale('ar'));
                               setState(() {
                                 _language = value.toString();
                               });
@@ -177,10 +181,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 });
               },
               title: Text(
-                'Notifications',
+                LocaleKeys.notifications.tr(),
                 style: TextStyle(color: theme.primary),
               ),
-              subtitle: _notification ? Text('On') : Text('Off'),
+              subtitle: _notification
+                  ? Text(LocaleKeys.on.tr())
+                  : Text(LocaleKeys.off.tr()),
               secondary: Icon(
                 _notification
                     ? Icons.notifications_active
@@ -202,17 +208,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: theme.primary,
               ),
               title: Text(
-                'Dark mode',
+                LocaleKeys.dark_mode.tr(),
                 style: TextStyle(color: theme.primary),
               ),
-              subtitle: _darkMode ? Text('On') : Text('Off'),
+              subtitle: _darkMode
+                  ? Text(LocaleKeys.on.tr())
+                  : Text(LocaleKeys.off.tr()),
             ),
           ),
           Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Contact us',
+              LocaleKeys.contact_us.tr(),
               style: TextStyle(
                 fontSize: 16,
                 color: theme.primary.withOpacity(0.6),
@@ -225,7 +233,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: Icon(Icons.chevron_right_rounded),
               iconColor: theme.primary,
               title: Text(
-                'Help',
+                LocaleKeys.help.tr(),
                 style: TextStyle(color: theme.primary),
               ),
             ),
@@ -235,7 +243,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Logging out',
+              LocaleKeys.logging_out.tr(),
               style: TextStyle(
                 fontSize: 16,
                 color: theme.primary.withOpacity(0.6),
@@ -247,12 +255,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               leading: Icon(Icons.logout_rounded),
               iconColor: theme.primary,
               title: Text(
-                'Log out',
+                LocaleKeys.log_out.tr(),
                 style: TextStyle(color: theme.primary),
               ),
               onTap: () {
-                _showDialog(context, 'Are you sure from Logging out?',
-                    'Sorry to hear that!');
+                _showDialog(
+                    context,
+                    '${LocaleKeys.are_u_sure_from_logging.tr()}?',
+                    LocaleKeys.sorry_to_hear.tr());
               },
             ),
           ),

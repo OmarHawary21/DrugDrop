@@ -1,4 +1,6 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/log_in_screen.dart';
@@ -65,7 +67,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                   FittedBox(
                     child: Text(
-                      'Enter your new password',
+                      LocaleKeys.enter_your_password.tr(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'PollerOne',
@@ -90,8 +92,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    child: const Text(
-                      'Reset',
+                    child: Text(
+                      LocaleKeys.reset.tr(),
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -134,7 +136,7 @@ class _PasswordFormState extends State<PasswordForm> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.lock),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: const Text('Password'),
+                  label: Text(LocaleKeys.password.tr()),
                   suffixIcon: IconButton(
                     onPressed: () => setState(() => _isVisible = !_isVisible),
                     icon: Icon(
@@ -151,7 +153,7 @@ class _PasswordFormState extends State<PasswordForm> {
                 ),
                 validator: (phoneNumber) {
                   if (phoneNumber!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   }
                 },
               ),
@@ -166,7 +168,7 @@ class _PasswordFormState extends State<PasswordForm> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.lock),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: const Text('Confirm Password'),
+                  label: Text(LocaleKeys.confirm_password.tr()),
                   suffixIcon: IconButton(
                     onPressed: () => setState(() => _isVisible = !_isVisible),
                     icon: Icon(
@@ -183,7 +185,7 @@ class _PasswordFormState extends State<PasswordForm> {
                 ),
                 validator: (phoneNumber) {
                   if (phoneNumber!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   }
                 },
               ),

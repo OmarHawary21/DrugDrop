@@ -1,3 +1,5 @@
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +36,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         : favorites.isEmpty
             ? Center(
                 child: Text(
-                  'Add new drugs to your favorites.',
+                  LocaleKeys.add_new_to_favorites.tr(),
                   style: TextStyle(
                     color: primary,
                     fontFamily: 'Poppins',
@@ -44,9 +46,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               )
             : GridView.builder(
                 itemBuilder: (_, index) => DrugCard(
-                  favorites[index].id,
-                  favorites[index].tradeName,
-                  favorites[index].price,
+                  favorites[index].id!,
+                  favorites[index].tradeName!,
+                  favorites[index].price!,
                   '',
                   favorites[index].isFavorite,
                 ),

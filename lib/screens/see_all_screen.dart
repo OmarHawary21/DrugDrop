@@ -37,7 +37,7 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(tag.name),
+        title: Text(tag.en_name),
         actions: [
           Consumer<CartProvider>(
             builder: (_, cart, ch) => Badge(
@@ -71,10 +71,10 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
             )
           : GridView.builder(
               itemBuilder: (_, index) => DrugCard(
-                drugs[index].id,
-                drugs[index].tradeName,
-                drugs[index].price,
-                drugs[index].imageUrl,
+                drugs[index].id!,
+                drugs[index].tradeName!,
+                drugs[index].price!,
+                drugs[index].imageUrl!,
                 drugs[index].isFavorite,
               ),
               itemCount: drugs.length,

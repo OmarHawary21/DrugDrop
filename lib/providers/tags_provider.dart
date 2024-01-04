@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'drug_data.dart';
 import '../main.dart';
 import '../models/tag.dart';
-import '../data/data.dart' as dummy;
+//import '../data/data.dart' as dummy;
 
 class TagsProvider with ChangeNotifier {
   final String token;
@@ -32,18 +32,23 @@ class TagsProvider with ChangeNotifier {
     var url = Uri.http(host, '/api/drug/get/category/$id', {'lang_code': 'en'});
     try {
       final response = await http.get(url, headers: {
+        // 'ngrok-skip-browser-warning': '1',
+        // 'content-type': 'multipart/form-data',
         'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
+        'Authorization':
+            'Bearer 1|RcIInMNgjhllOGmcNyuDBEepf5LoSieeLsI7gDtha05d41a6',
       });
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }
+      print(extractedData);
       final List<Tag> loadedTags = [];
       extractedData['Data'].forEach(
         (tagData) {
           int tempID = tagData['id'];
           String tempName = tagData['en_name'];
+          String tempNameAr = tagData['ar_name'];
           final List<Drug> tempDrug = [];
           for (var drugData in tagData['drugs']) {
             tempDrug.add(Drug(
@@ -57,10 +62,14 @@ class TagsProvider with ChangeNotifier {
                 price: drugData['price'],
                 quantity: drugData['quantitiy'],
                 expiryDate: drugData['expiryDate'].toString(),
-                imageUrl: 'test',
+                imageUrl: drugData['img_url'] ?? 'null',
                 isFavorite: drugData['is_favorite']));
           }
-          loadedTags.add(Tag(id: tempID, name: tempName, drugs: tempDrug));
+          loadedTags.add(Tag(
+              id: tempID,
+              en_name: tempName,
+              ar_name: tempNameAr,
+              drugs: tempDrug));
         },
       );
       _tags = loadedTags;

@@ -1,55 +1,38 @@
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 
-import 'drug_item.dart';
-import '../screens/see_all_screen.dart';
+import '../widgets/drug_item.dart';
 import '../providers/drug_data.dart';
-import '../providers/tags_provider.dart';
 
-class TagItem extends StatefulWidget {
+import '../screens/see_all_screen.dart';
+
+class TagItem extends StatelessWidget {
   static const routeName = '/tag-item';
-
   final int tagId;
   final String tagTitle;
   final List<Drug> drugs;
-
-  TagItem(this.tagId, this.tagTitle, this.drugs);
-
-  @override
-  State<TagItem> createState() => _TagItemState();
-}
-
-class _TagItemState extends State<TagItem> {
-  bool _isInit = false;
-  bool _isLoading = false;
-
   final List<String> imagePath = [
     'assets/images/Medicine.svg',
     'assets/images/spoon and syrup.svg',
-    'assets/images/cream.svg',
     'assets/images/Syringe.svg',
+    'assets/images/eye-dropper.svg',
     'assets/images/spray-can.svg',
+    'assets/images/cream.svg',
     'assets/images/eye-dropper.svg',
   ];
 
-  @override
-  void didChangeDependencies() async {
-    if (!_isInit){
-      setState(() => _isLoading = true);
-      await Provider.of<TagsProvider>(context).fetchTagDrugs(widget.tagId);
-      setState(() => _isLoading = false);
-    }
-    super.didChangeDependencies();
-  }
+  TagItem(this.tagId, this.tagTitle, this.drugs);
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).colorScheme;
     var media = MediaQuery.of(context).size;
+    //here we are getting the id of category and not for a tag
 
     return Padding(
-      padding: const EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.only(top: 20),
       child: Column(
         children: [
           Padding(
@@ -59,13 +42,10 @@ class _TagItemState extends State<TagItem> {
               children: [
                 Row(
                   children: [
-                    SizedBox(
-                      width: 35,
-                      child: SvgPicture.asset(imagePath[widget.tagId]),
-                    ),
+                    SvgPicture.asset(imagePath[tagId - 1]),
                     const SizedBox(width: 15),
                     Text(
-                      widget.tagTitle,
+                      tagTitle,
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w700,
@@ -78,9 +58,9 @@ class _TagItemState extends State<TagItem> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context)
-                        .pushNamed(SeeAllScreen.routeName, arguments: widget.tagId);
+                        .pushNamed(SeeAllScreen.routeName, arguments: tagId);
                   },
-                  child: const Text('See all...'),
+                  child: Text('${LocaleKeys.see_all.tr()}...'),
                 ),
               ],
             ),
@@ -91,14 +71,15 @@ class _TagItemState extends State<TagItem> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemBuilder: (ctx, i) => DrugItem(
-                widget.drugs[i].id,
-                widget.drugs[i].imageUrl,
-                widget.drugs[i].price.toString(),
-                widget.drugs[i].tradeName,
+                drugs[i].id!,
+                drugs[i].imageUrl!,
+                drugs[i].price.toString(),
+                drugs[i].tradeName!,
               ),
-              itemCount: widget.drugs.length,
+              itemCount: drugs.length,
             ),
           ),
+          Divider(),
         ],
       ),
     );

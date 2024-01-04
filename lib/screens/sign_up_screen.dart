@@ -1,3 +1,8 @@
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+import '/screens/profile_screen.dart';
+import '/widgets/profile_item.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
@@ -81,7 +86,7 @@ class SignUpScreen extends StatelessWidget {
                       Logo(),
                       const Spacer(flex: 1),
                       Text(
-                        'Create New\nAccount',
+                        LocaleKeys.create_new_account.tr(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'PollerOne',
@@ -149,7 +154,7 @@ class _signUpFormState extends State<_signUpForm> {
       builder: (_) => AlertDialog(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
-          'An error Occurred',
+          LocaleKeys.an_error_occured.tr(),
           style: TextStyle(color: Theme.of(context).colorScheme.error),
         ),
         content: Text(content),
@@ -161,7 +166,7 @@ class _signUpFormState extends State<_signUpForm> {
               ),
             ),
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Try again'),
+            child: Text(LocaleKeys.try_again.tr()),
           ),
         ],
       ),
@@ -207,7 +212,7 @@ class _signUpFormState extends State<_signUpForm> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.person),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: const Text('Name'),
+                  label: Text(LocaleKeys.name.tr()),
                   isDense: true,
                   filled: true,
                   fillColor: Colors.transparent,
@@ -218,7 +223,7 @@ class _signUpFormState extends State<_signUpForm> {
                 ),
                 validator: (name) {
                   if (name!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   }
                   return null;
                 },
@@ -247,7 +252,7 @@ class _signUpFormState extends State<_signUpForm> {
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                   ),
-                  label: const Text('Phone Number'),
+                  label: Text(LocaleKeys.phone_number.tr()),
                   isDense: true,
                   filled: true,
                   fillColor: Colors.transparent,
@@ -258,9 +263,9 @@ class _signUpFormState extends State<_signUpForm> {
                 ),
                 validator: (phoneNumber) {
                   if (phoneNumber!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   } else if (phoneNumber.length < 8) {
-                    return 'Must be 8 digits';
+                    return LocaleKeys.must_be_only_8_digits.tr();
                   }
                   return null;
                 },
@@ -280,7 +285,7 @@ class _signUpFormState extends State<_signUpForm> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.lock),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: const Text('Password'),
+                  label: Text(LocaleKeys.password.tr()),
                   suffixIcon: IconButton(
                     onPressed: () => setState(() => _isVisible = !_isVisible),
                     icon: Icon(
@@ -297,9 +302,9 @@ class _signUpFormState extends State<_signUpForm> {
                 ),
                 validator: (password) {
                   if (password!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   } else if (password.length < 4) {
-                    return 'Must be 4 digits or more';
+                    return LocaleKeys.must_be_4_digits.tr();
                   }
                   return null;
                 },
@@ -317,7 +322,7 @@ class _signUpFormState extends State<_signUpForm> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.lock),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: const Text('Confirm Password'),
+                  label: Text(LocaleKeys.confirm_password.tr()),
                   suffixIcon: IconButton(
                     onPressed: () => setState(() => _isVisible = !_isVisible),
                     icon: Icon(
@@ -334,11 +339,11 @@ class _signUpFormState extends State<_signUpForm> {
                 ),
                 validator: (password) {
                   if (password!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   } else if (password.length < 4) {
-                    return 'Must be 4 digits or more';
+                    return LocaleKeys.must_be_4_digits.tr();
                   } else if (_passwordController.text != password) {
-                    return 'Password doesn\'t match';
+                    return LocaleKeys.password_doesnt_match.tr();
                   }
                   return null;
                 },
@@ -357,7 +362,7 @@ class _signUpFormState extends State<_signUpForm> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.location_on),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: const Text('Location'),
+                  label: Text(LocaleKeys.location.tr()),
                   isDense: true,
                   filled: true,
                   fillColor: Colors.transparent,
@@ -368,7 +373,7 @@ class _signUpFormState extends State<_signUpForm> {
                 ),
                 validator: (location) {
                   if (location!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   }
                   return null;
                 },
@@ -378,9 +383,9 @@ class _signUpFormState extends State<_signUpForm> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              // onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-              //     HomeBottomBar.routeName, (Route<dynamic> route) => false),
-              onPressed: _submit,
+              onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                  HomeBottomBar.routeName, (Route<dynamic> route) => false),
+              // onPressed: _submit,
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
@@ -389,7 +394,7 @@ class _signUpFormState extends State<_signUpForm> {
                 foregroundColor: Colors.white,
               ),
               child: Text(
-                'Sign Up',
+                LocaleKeys.sign_up.tr(),
                 style: TextStyle(
                   color: Theme.of(context).scaffoldBackgroundColor,
                   fontFamily: 'Poppins',
@@ -401,8 +406,8 @@ class _signUpFormState extends State<_signUpForm> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Already Registered?',
+                Text(
+                  '${LocaleKeys.already_registered.tr()}?',
                   style: TextStyle(fontFamily: 'Poppins'),
                 ),
                 TextButton(
@@ -415,8 +420,8 @@ class _signUpFormState extends State<_signUpForm> {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         LogInScreen.routeName, (Route<dynamic> route) => false);
                   },
-                  child: const Text(
-                    'log In',
+                  child: Text(
+                    LocaleKeys.login.tr(),
                     style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontFamily: 'Poppins',

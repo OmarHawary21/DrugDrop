@@ -33,13 +33,14 @@ class SearchProvider with ChangeNotifier {
       url = Uri.http(host, '/api/search/drug',
           {'lang_code': 'en', 'search': value, 'category': cat});
     } else if (type == 'Category') {
-      url = Uri.http(host, '/api/serach/category', {'search': value});
+      url = Uri.http(host, '/api/search/category', {'search': value});
     }
 
     try {
       final response = await http.get(url, headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
+        'Authorization':
+            'Bearer 1|RcIInMNgjhllOGmcNyuDBEepf5LoSieeLsI7gDtha05d41a6'
       });
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Categories> loadedCategories = [];
@@ -47,11 +48,13 @@ class SearchProvider with ChangeNotifier {
       if (extractedData == Null) {
         return;
       }
+      print(extractedData);
       if (type == 'Category') {
         extractedData['Data'].forEach((index) {
           loadedCategories.add(Categories(
             id: index['id'],
-            name: index['en_name'],
+            en_name: index['en_name'],
+            ar_name: index['ar_name'],
           ));
         });
         _searchedCategories = loadedCategories;
@@ -67,7 +70,7 @@ class SearchProvider with ChangeNotifier {
                 dose: drug['dose'],
                 doseUnit: drug['dose_unit'],
                 price: drug['price'],
-                quantity: drug['quantitiy'],
+                quantity: drug['quantity'],
                 expiryDate: drug['expiry_date'].toString(),
                 imageUrl: drug['img_url'] ?? 'null'),
           );

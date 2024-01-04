@@ -1,3 +1,5 @@
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:animate_do/animate_do.dart';
@@ -14,7 +16,7 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Cart'),
+        title: Text(LocaleKeys.cart.tr()),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -54,8 +56,8 @@ class CartScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            const Text(
-              'Total: ',
+            Text(
+              '${LocaleKeys.total_price.tr()}:',
               style: TextStyle(
                 fontSize: 18,
                 fontFamily: 'Poppins',
@@ -64,7 +66,7 @@ class CartScreen extends StatelessWidget {
             ),
             Chip(
               label: Text(
-                '1600 (S.P)',
+                '1600 (${LocaleKeys.sp.tr()})',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -119,15 +121,15 @@ class _OrderButtonState extends State<OrderButton> {
       ),
       onPressed: () {},
       child: _isDisabled
-          ? const Text(
-              'Nothing to order',
+          ? Text(
+              LocaleKeys.nothing_to_order.tr(),
               style: TextStyle(
                 fontFamily: 'Poppins',
                 color: Colors.white,
               ),
             )
-          : const Text(
-              'Place Order',
+          : Text(
+              LocaleKeys.place_order.tr(),
               style: TextStyle(
                 fontFamily: 'Poppins',
                 color: Colors.white,

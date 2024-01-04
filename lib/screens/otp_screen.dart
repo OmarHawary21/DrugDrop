@@ -1,4 +1,6 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'reset_password_screen.dart';
@@ -67,7 +69,7 @@ class OTPScreen extends StatelessWidget {
                     child: Image.asset('assets/images/OTP.png'),
                   ),
                   Text(
-                    'Enter the code you received',
+                    LocaleKeys.enter_the_code_you_recieved.tr(),
                     style: TextStyle(
                         color: theme.colorScheme.primary,
                         fontFamily: 'PollerOne',
@@ -137,8 +139,8 @@ class OTPScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    child: const Text(
-                      'Confirm',
+                    child: Text(
+                      LocaleKeys.confirm.tr(),
                       style: TextStyle(fontSize: 16),
                     ),
                   ),

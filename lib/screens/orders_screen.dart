@@ -1,6 +1,7 @@
+import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:animate_do/animate_do.dart';
 
 import '../providers/orders_provider.dart';
 import '../widgets/order_item.dart';
@@ -29,8 +30,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     final orderProvider = Provider.of<OrdersProvider>(context);
     return orderProvider.orders.isEmpty
-        ? const Center(
-            child: Text('You have no orders'),
+        ? Center(
+            child: Text(LocaleKeys.you_have_no_orders.tr()),
           )
         : ListView.builder(
             itemBuilder: (ctx, i) => OrderItem(orderProvider.orders[i]),

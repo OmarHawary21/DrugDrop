@@ -8,6 +8,7 @@ import '../main.dart';
 
 class AuthProvider with ChangeNotifier {
   String _token = '';
+  int _userId = 0;
 
   String get token {
     if (_token.isNotEmpty) {
@@ -16,8 +17,15 @@ class AuthProvider with ChangeNotifier {
     return '';
   }
 
+  int get userId {
+    if (_userId != 0) {
+      return _userId;
+    }
+    return -1;
+  }
+
   bool get isAuth {
-    return token != '';
+    return token.isNotEmpty;
   }
 
   Future<void> login(String phoneNumber, String password) async {
@@ -25,9 +33,7 @@ class AuthProvider with ChangeNotifier {
     try {
       final response = await http.post(
         url,
-        headers: {
-          'Accept': 'application/json'
-        },
+        headers: {'Accept': 'application/json'},
         body: {
           'phone_number': '09$phoneNumber',
           'password': password,
@@ -37,24 +43,25 @@ class AuthProvider with ChangeNotifier {
       if (responseData == null) {
         throw Exception();
       }
+      print(responseData);
       if (responseData['Status'] == 'Failed') {
         throw Exception('Failed');
       }
       _token = responseData['Data']['token'];
+      _userId = responseData['Data']['id'];
       notifyListeners();
     } catch (error) {
       rethrow;
     }
   }
 
-  Future<void> signUp(String name, String phoneNumber, String location, String password) async {
+  Future<void> signUp(
+      String name, String phoneNumber, String location, String password) async {
     final url = Uri.parse('http://$host/api/user/create');
     try {
       final response = await http.put(
         url,
-        headers: {
-          'Accept': 'application/json'
-        },
+        headers: {'Accept': 'application/json'},
         body: {
           'name': name,
           'phone_number': '09$phoneNumber',
@@ -76,25 +83,11 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> logout() async {
-    final url = Uri.parse('http://$host/api/user/logout');
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-      final data = json.decode(response.body);
-    } catch (error) {
-      rethrow;
-    }
-    _token = '';
-    notifyListeners();
-  }
-  
   Future<void> forgotPassword(String phoneNumber) async {
     final url = Uri.parse('http://$host/api/user/create');
+  }
+
+  Future<void> logOut(String token) async {
+    final url = Uri.http(host, '/$token');
   }
 }
