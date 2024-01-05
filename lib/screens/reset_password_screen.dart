@@ -1,4 +1,6 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:drug_drop/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/log_in_screen.dart';
@@ -65,7 +67,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                   FittedBox(
                     child: Text(
-                      'Enter your new password',
+                      LocaleKeys.enter_your_password.tr(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'PollerOne',

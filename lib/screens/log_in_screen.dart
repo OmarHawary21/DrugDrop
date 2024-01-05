@@ -214,7 +214,6 @@ class _FormsState extends State<Forms> {
             const Duration(seconds: 5),
             onTimeout: () => throw Exception('Something went wrong.'),
           );
-      Provider.of<CategoriesProvider>(context, listen: false).fetchCategories();
       Navigator.of(context).pushNamedAndRemoveUntil(
           HomeBottomBar.routeName, (Route<dynamic> route) => false);
     } catch (error) {
@@ -240,7 +239,7 @@ class _FormsState extends State<Forms> {
         child: Column(
           children: [
             SlideInLeft(
-              duration: Duration(milliseconds: 1500),
+              duration: const Duration(milliseconds: 1500),
               child: TextFormField(
                 textAlignVertical: TextAlignVertical.center,
                 textInputAction: TextInputAction.next,

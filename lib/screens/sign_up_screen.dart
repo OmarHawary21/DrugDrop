@@ -1,8 +1,11 @@
+import 'package:drug_drop/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-import 'home_bottom_bar.dart';
+// import 'otp_screen.dart';
+import 'sign_up_otp_screen.dart';
 import 'log_in_screen.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/logo.dart';
@@ -81,7 +84,7 @@ class SignUpScreen extends StatelessWidget {
                       Logo(),
                       const Spacer(flex: 1),
                       Text(
-                        'Create New\nAccount',
+                        LocaleKeys.create_new_account.tr(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'PollerOne',
@@ -119,7 +122,7 @@ class Circle extends StatelessWidget {
   }
 }
 
-var _isVisible;
+var _isVisible = false;
 
 class _signUpForm extends StatefulWidget {
   @override
@@ -127,6 +130,8 @@ class _signUpForm extends StatefulWidget {
 }
 
 class _signUpFormState extends State<_signUpForm> {
+  bool _isLoading = false;
+
   final _passwordController = TextEditingController();
   final _form = GlobalKey<FormState>();
   final Map<String, String> _authData = {
@@ -149,7 +154,7 @@ class _signUpFormState extends State<_signUpForm> {
       builder: (_) => AlertDialog(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
-          'An error Occurred',
+          LocaleKeys.an_error_occured.tr(),
           style: TextStyle(color: Theme.of(context).colorScheme.error),
         ),
         content: Text(content),
@@ -160,8 +165,11 @@ class _signUpFormState extends State<_signUpForm> {
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Try again'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() => _isLoading = false);
+            },
+            child: Text(LocaleKeys.try_again.tr()),
           ),
         ],
       ),
@@ -174,15 +182,17 @@ class _signUpFormState extends State<_signUpForm> {
     }
     _form.currentState!.save();
     try {
+      setState(() => _isLoading = true);
       await Provider.of<AuthProvider>(context, listen: false).signUp(
         _authData['name'].toString(),
         _authData['phoneNumber'].toString(),
         _authData['location'].toString(),
         _authData['password'].toString(),
       );
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          HomeBottomBar.routeName, (Route<dynamic> route) => false);
+      setState(() => _isLoading = false);
+      Navigator.of(context).pushNamed(SignUpOTPScreen.routeName);
     } catch (error) {
+      setState(() => _isLoading = false);
       _showDialog(context, error.toString());
     }
   }
@@ -207,7 +217,7 @@ class _signUpFormState extends State<_signUpForm> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.person),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: const Text('Name'),
+                  label: Text(LocaleKeys.name.tr()),
                   isDense: true,
                   filled: true,
                   fillColor: Colors.transparent,
@@ -218,7 +228,7 @@ class _signUpFormState extends State<_signUpForm> {
                 ),
                 validator: (name) {
                   if (name!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   }
                   return null;
                 },
@@ -247,7 +257,7 @@ class _signUpFormState extends State<_signUpForm> {
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                   ),
-                  label: const Text('Phone Number'),
+                  label: Text(LocaleKeys.phone_number.tr()),
                   isDense: true,
                   filled: true,
                   fillColor: Colors.transparent,
@@ -258,9 +268,9 @@ class _signUpFormState extends State<_signUpForm> {
                 ),
                 validator: (phoneNumber) {
                   if (phoneNumber!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   } else if (phoneNumber.length < 8) {
-                    return 'Must be 8 digits';
+                    return LocaleKeys.must_be_only_8_digits.tr();
                   }
                   return null;
                 },
@@ -280,11 +290,12 @@ class _signUpFormState extends State<_signUpForm> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.lock),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: const Text('Password'),
+                  label: Text(LocaleKeys.password.tr()),
                   suffixIcon: IconButton(
                     onPressed: () => setState(() => _isVisible = !_isVisible),
                     icon: Icon(
-                        _isVisible ? Icons.visibility : Icons.visibility_off),
+                      _isVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
                   ),
                   suffixIconColor: theme.colorScheme.primary,
                   isDense: true,
@@ -297,9 +308,9 @@ class _signUpFormState extends State<_signUpForm> {
                 ),
                 validator: (password) {
                   if (password!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   } else if (password.length < 4) {
-                    return 'Must be 4 digits or more';
+                    return LocaleKeys.must_be_4_digits.tr();
                   }
                   return null;
                 },
@@ -317,7 +328,7 @@ class _signUpFormState extends State<_signUpForm> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.lock),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: const Text('Confirm Password'),
+                  label: Text(LocaleKeys.confirm_password.tr()),
                   suffixIcon: IconButton(
                     onPressed: () => setState(() => _isVisible = !_isVisible),
                     icon: Icon(
@@ -334,11 +345,11 @@ class _signUpFormState extends State<_signUpForm> {
                 ),
                 validator: (password) {
                   if (password!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   } else if (password.length < 4) {
-                    return 'Must be 4 digits or more';
+                    return LocaleKeys.must_be_4_digits.tr();
                   } else if (_passwordController.text != password) {
-                    return 'Password doesn\'t match';
+                    return LocaleKeys.password_doesnt_match.tr();
                   }
                   return null;
                 },
@@ -357,7 +368,7 @@ class _signUpFormState extends State<_signUpForm> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.location_on),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: const Text('Location'),
+                  label: Text(LocaleKeys.location.tr()),
                   isDense: true,
                   filled: true,
                   fillColor: Colors.transparent,
@@ -368,7 +379,7 @@ class _signUpFormState extends State<_signUpForm> {
                 ),
                 validator: (location) {
                   if (location!.isEmpty) {
-                    return 'This field is required';
+                    return LocaleKeys.this_field_is_required.tr();
                   }
                   return null;
                 },
@@ -377,32 +388,34 @@ class _signUpFormState extends State<_signUpForm> {
               ),
             ),
             const SizedBox(height: 10),
-            ElevatedButton(
-              // onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-              //     HomeBottomBar.routeName, (Route<dynamic> route) => false),
-              onPressed: _submit,
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Colors.white,
-              ),
-              child: Text(
-                'Sign Up',
-                style: TextStyle(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  fontFamily: 'Poppins',
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            _isLoading
+                ? const CircularProgressIndicator(
+                    strokeCap: StrokeCap.round,
+                  )
+                : ElevatedButton(
+                    onPressed: _submit,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text(
+                      LocaleKeys.sign_up.tr(),
+                      style: TextStyle(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Already Registered?',
+                Text(
+                  '${LocaleKeys.already_registered.tr()}?',
                   style: TextStyle(fontFamily: 'Poppins'),
                 ),
                 TextButton(
@@ -415,8 +428,8 @@ class _signUpFormState extends State<_signUpForm> {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         LogInScreen.routeName, (Route<dynamic> route) => false);
                   },
-                  child: const Text(
-                    'log In',
+                  child: Text(
+                    LocaleKeys.login.tr(),
                     style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontFamily: 'Poppins',

@@ -2,15 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:animate_do/animate_do.dart';
 
+import 'notifications_screen.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/cart_item.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   static const routeName = '/cart-screen';
 
   @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  bool _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<CartProvider>(context);
+    final primary = Theme.of(context).colorScheme.primary;
+    final secondary = Theme.of(context).colorScheme.secondary;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final cart = Provider.of<CartProvider>(context, listen: false).items;
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    final total = Provider.of<CartProvider>(context, listen: false).total;
 
     return Scaffold(
       appBar: AppBar(
@@ -19,120 +33,112 @@ class CartScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).pushNamed(NotificationsScreen.routeName),
               icon: const Icon(
-                Icons.settings,
+                Icons.notifications,
               ),
             ),
           ),
         ],
       ),
-      body: SlideInUp(
-        duration: const Duration(milliseconds: 800),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (ctx, i) => CartItem(
-                  cart.items[i].id,
-                  cart.items[i].productId,
-                  cart.items[i].title,
-                  cart.items[i].price,
-                  cart.items[i].quantity,
-                ),
-                itemCount: cart.items.length,
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomSheet: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            const Text(
-              'Total: ',
-              style: TextStyle(
-                fontSize: 18,
-                fontFamily: 'Poppins',
-                color: Colors.white,
-              ),
-            ),
-            Chip(
-              label: Text(
-                '1600 (S.P)',
+      body: cart.isEmpty
+          ? Center(
+              child: Text(
+                'There is nothing in your cart.',
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: primary,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w600,
                 ),
-              ),
-              side: BorderSide.none,
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-            ),
-            // OrderButton(cart),
-          ],
-        ),
-      ),
-      floatingActionButton: Container(
-        transform: Matrix4.translationValues(0, -40, 0),
-        child: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
-          ),
-          child: Icon(
-            Icons.local_shipping,
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class OrderButton extends StatefulWidget {
-  final CartProvider cart;
-
-  OrderButton(this.cart);
-
-  @override
-  State<OrderButton> createState() => _OrderButtonState();
-}
-
-class _OrderButtonState extends State<OrderButton> {
-  @override
-  Widget build(BuildContext context) {
-    bool _isDisabled = (widget.cart.items.length <= 0);
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        foregroundColor:
-            _isDisabled ? Colors.grey : Theme.of(context).colorScheme.primary,
-        side: BorderSide(
-          color:
-              _isDisabled ? Colors.grey : Theme.of(context).colorScheme.primary,
-        ),
-      ),
-      onPressed: () {},
-      child: _isDisabled
-          ? const Text(
-              'Nothing to order',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                color: Colors.white,
               ),
             )
-          : const Text(
-              'Place Order',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-              ),
+          : SlideInUp(
+              duration: const Duration(milliseconds: 800),
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Stack(
+                      children: [
+                        ListView.builder(
+                          itemBuilder: (ctx, i) => CartItem(
+                            cart[i].productId,
+                            cart[i].title,
+                            cart[i].price,
+                            cart[i].quantity,
+                          ),
+                          itemCount: cart.length,
+                        ),
+                        Positioned(
+                          right: width * 0.03,
+                          bottom: height * 0.09,
+                          child: IconButton.filledTonal(
+                            onPressed: () async {
+                              setState(() => _isLoading = true);
+                              await cartProvider.placeOrder();
+                              setState(() => _isLoading = false);
+                            },
+                            style: IconButton.styleFrom(
+                              backgroundColor: primary,
+                            ),
+                            icon: Icon(
+                              Icons.local_shipping,
+                              size: width * 0.08,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
             ),
+      bottomSheet: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(15),
+          topLeft: Radius.circular(15),
+        ),
+        child: BottomAppBar(
+          color: primary,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const Text(
+                'Total: ',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Poppins',
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                '$total  (S.P)',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      // floatingActionButton: Container(
+      //   transform: Matrix4.translationValues(0, -40, 0),
+      //   child: _isLoading
+      //       ? const CircularProgressIndicator(strokeCap: StrokeCap.round)
+      //       : FloatingActionButton(
+      //           onPressed: () async {
+      //             setState(() => _isLoading = true);
+      //             await cartProvider.placeOrder();
+      //             setState(() => _isLoading = false);
+      //           },
+      //           backgroundColor: Theme.of(context).colorScheme.primary,
+      //           shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(50),
+      //           ),
+      //           child: Icon(
+      //             Icons.local_shipping,
+      //             color: Theme.of(context).colorScheme.secondary,
+      //           ),
+      //         ),
+      // ),
     );
   }
 }
