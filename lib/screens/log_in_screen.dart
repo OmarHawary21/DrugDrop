@@ -1,5 +1,4 @@
-import 'package:drug_drop2/translations/locale_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:drug_drop/providers/categories_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
@@ -96,44 +95,41 @@ class LogInScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SlideInUp(
-                duration: const Duration(milliseconds: 1000),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Logo(),
-                    const Spacer(),
-                    Column(
-                      children: [
-                        FittedBox(
-                          child: Text(
-                            LocaleKeys.login.tr(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'PollerOne',
-                              fontSize: 20,
-                              color: theme.colorScheme.primary,
-                            ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Logo(),
+                  const Spacer(),
+                  Column(
+                    children: [
+                      FittedBox(
+                        child: Text(
+                          'Login',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'PollerOne',
+                            fontSize: 20,
+                            color: theme.colorScheme.primary,
                           ),
                         ),
-                        FittedBox(
-                          child: Text(
-                            LocaleKeys.sign_in_to_continue.tr(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 15,
-                              color: theme.colorScheme.primary,
-                            ),
+                      ),
+                      FittedBox(
+                        child: Text(
+                          'sign in to continue',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 15,
+                            color: theme.colorScheme.primary,
                           ),
                         ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Forms(),
-                    const Spacer(flex: 2),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Forms(),
+                  const Spacer(flex: 2),
+                ],
               ),
             ],
           ),
@@ -185,7 +181,7 @@ class _FormsState extends State<Forms> {
       builder: (_) => AlertDialog(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
-          LocaleKeys.an_error_occured.tr(),
+          'An error Occurred',
           style: TextStyle(color: Theme.of(context).colorScheme.error),
         ),
         content: Text(content),
@@ -197,7 +193,7 @@ class _FormsState extends State<Forms> {
               ),
             ),
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(LocaleKeys.try_again.tr()),
+            child: const Text('Try again'),
           ),
         ],
       ),
@@ -222,9 +218,11 @@ class _FormsState extends State<Forms> {
           HomeBottomBar.routeName, (Route<dynamic> route) => false);
     } catch (error) {
       if (error.toString() == 'Something went wrong.') {
-        _showDialog(context, LocaleKeys.wrong_phone_password.tr());
+        _showDialog(context,
+            'Worng phone number or password please check the spelling and try again.');
       } else {
-        _showDialog(context, LocaleKeys.wrong_phone_password.tr());
+        _showDialog(context,
+            'Worng phone number or password please check the spelling and try again.');
       }
     }
     setState(() => _isLoading = false);
@@ -241,7 +239,7 @@ class _FormsState extends State<Forms> {
         child: Column(
           children: [
             SlideInLeft(
-              duration: Duration(milliseconds: 1500),
+              duration: const Duration(milliseconds: 1500),
               child: TextFormField(
                 textAlignVertical: TextAlignVertical.center,
                 textInputAction: TextInputAction.next,
@@ -261,7 +259,7 @@ class _FormsState extends State<Forms> {
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                   ),
-                  label: Text(LocaleKeys.phone_number.tr()),
+                  label: const Text('Phone Number'),
                   isDense: true,
                   filled: true,
                   fillColor: Colors.transparent,
@@ -272,9 +270,9 @@ class _FormsState extends State<Forms> {
                 ),
                 validator: (phoneNumber) {
                   if (phoneNumber!.isEmpty) {
-                    return LocaleKeys.this_field_is_required.tr();
+                    return 'This field is required';
                   } else if (phoneNumber.length < 8) {
-                    return LocaleKeys.must_be_only_8_digits.tr();
+                    return 'Must be 8 digits';
                   }
                 },
                 onSaved: (phoneNumber) =>
@@ -291,7 +289,7 @@ class _FormsState extends State<Forms> {
                   contentPadding: const EdgeInsets.only(left: 15),
                   prefixIcon: const Icon(Icons.lock),
                   prefixIconColor: theme.colorScheme.primary,
-                  label: Text(LocaleKeys.password.tr()),
+                  label: const Text('Password'),
                   suffixIcon: IconButton(
                     onPressed: () => setState(() => _isVisible = !_isVisible),
                     icon: Icon(
@@ -308,7 +306,7 @@ class _FormsState extends State<Forms> {
                 ),
                 validator: (phoneNumber) {
                   if (phoneNumber!.isEmpty) {
-                    return LocaleKeys.this_field_is_required.tr();
+                    return 'This field is required';
                   }
                 },
                 onSaved: (password) =>
@@ -319,7 +317,7 @@ class _FormsState extends State<Forms> {
             _isLoading
                 ? CircularProgressIndicator(
                     color: theme.colorScheme.primary,
-                    //  strokeCap: StrokeCap.round,
+                    strokeCap: StrokeCap.round,
                   )
                 : ElevatedButton(
                     // onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
@@ -332,8 +330,8 @@ class _FormsState extends State<Forms> {
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Colors.white,
                     ),
-                    child: Text(
-                      LocaleKeys.login.tr(),
+                    child: const Text(
+                      'Login',
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -345,9 +343,9 @@ class _FormsState extends State<Forms> {
               ),
               onPressed: () => Navigator.of(context)
                   .pushNamed(ForgotPasswordScreen.routeName),
-              child: FittedBox(
+              child: const FittedBox(
                 child: Text(
-                  LocaleKeys.forget_your_password.tr(),
+                  'Forgot your password?',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
                   ),
@@ -357,8 +355,8 @@ class _FormsState extends State<Forms> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FittedBox(
-                  child: Text(LocaleKeys.dont_have_an_account.tr()),
+                const FittedBox(
+                  child: Text('Don\'t have an account? '),
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
@@ -371,9 +369,9 @@ class _FormsState extends State<Forms> {
                         IntroScreens.routeName,
                         (Route<dynamic> route) => false);
                   },
-                  child: FittedBox(
+                  child: const FittedBox(
                     child: Text(
-                      LocaleKeys.sign_up.tr(),
+                      'Sign Up',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                       ),

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'cart_screen.dart';
+import 'notifications_screen.dart';
 import '../widgets/tag_item.dart';
 import '../providers/tags_provider.dart';
 import '../providers/categories_provider.dart';
+import '../providers/cart_provider.dart';
 
 class TagsScreen extends StatefulWidget {
   static const routeName = '/tags';
@@ -14,28 +16,20 @@ class TagsScreen extends StatefulWidget {
 }
 
 class _TagsScreenState extends State<TagsScreen> {
-  var _isInit = true;
-  var _isLoading = false;
+  bool _isLoading = false;
+  late final catId = ModalRoute.of(context)?.settings.arguments as int;
+
   @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      final catId = ModalRoute.of(context)?.settings.arguments as int;
-      _isLoading = true;
-      Provider.of<TagsProvider>(context, listen: false)
-          .fetchAndSetTags(catId)
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
+  void didChangeDependencies() async {
+    setState(() => _isLoading = true);
+    await Provider.of<TagsProvider>(context, listen: false)
+        .fetchAndSetTags(catId);
+    setState(() => _isLoading = false);
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    final catId = ModalRoute.of(context)?.settings.arguments as int;
     final catData = Provider.of<CategoriesProvider>(context).findById(catId);
     final tags = Provider.of<TagsProvider>(context, listen: false).tags;
     Locale currentLocale = Localizations.localeOf(context);
@@ -45,33 +39,49 @@ class _TagsScreenState extends State<TagsScreen> {
             ? catData.en_name
             : catData.ar_name),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(CartScreen.routeName);
-            },
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Theme.of(context).colorScheme.primary,
+          Consumer<CartProvider>(
+            builder: (_, cart, ch) => Badge(
+              backgroundColor: Colors.transparent,
+              offset: const Offset(-2, 4),
+              label: Text(cart.items.length.toString()),
+              child: ch,
+            ),
+            child: IconButton(
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(CartScreen.routeName),
+              icon: const Icon(
+                Icons.shopping_cart,
+              ),
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.settings,
-              color: Theme.of(context).colorScheme.primary,
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pushNamed(NotificationsScreen.routeName),
+              icon: const Icon(
+                Icons.notifications,
+              ),
             ),
           ),
         ],
       ),
-      body: ListView.builder(
-        itemBuilder: (_, index) => TagItem(
-            tags[index].id,
-            currentLocale.languageCode == 'en'
-                ? tags[index].en_name
-                : tags[index].ar_name,
-            tags[index].drugs),
-        itemCount: tags.length,
-      ),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView.builder(
+              itemBuilder: (_, index) => tags[index].drugs.isNotEmpty ? Column(
+                children: [
+                  TagItem(tags[index].id, tags[index].name, tags[index].drugs, catId),
+                  Divider(
+                    color: Theme.of(context).colorScheme.primary,
+                    indent: 40,
+                    endIndent: 40,
+                  ),
+                ],
+              ) : Container(),
+              itemCount: tags.length,
+            ),
     );
   }
 }

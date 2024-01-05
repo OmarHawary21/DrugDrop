@@ -3,13 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../main.dart';
-import '../models/category.dart';
+import '../providers/category.dart';
 
 class SearchProvider with ChangeNotifier {
-  final String token;
-
-  SearchProvider(this.token);
-
   List<Categories> _searchedCategories = [];
   List<Drug> _searchedDrugs = [];
 
@@ -44,7 +40,7 @@ class SearchProvider with ChangeNotifier {
       final response = await http.get(url, headers: {
         'Accept': 'application/json',
         'Authorization':
-            'Bearer $token'
+            'Bearer 1|RcIInMNgjhllOGmcNyuDBEepf5LoSieeLsI7gDtha05d41a6'
       });
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Categories> loadedCategories = [];

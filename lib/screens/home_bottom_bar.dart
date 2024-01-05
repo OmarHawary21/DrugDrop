@@ -1,30 +1,27 @@
 import 'dart:convert';
 
-import '/main.dart';
-import '/providers/notification_provider.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-
-import '/screens/favorites_screen.dart';
-import '/translations/locale_keys.g.dart';
+import 'package:drug_drop/translations/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
-
-import '/screens/notifications_screen.dart';
-import '/screens/profile_screen.dart';
-import '/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'categories_screen.dart';
 import 'cart_screen.dart';
 import 'orders_screen.dart';
 import 'search-screen.dart';
-//import 'favorites_screen.dart';
+import 'favorites_screen.dart';
+import 'profile_screen.dart';
+import 'settings_screen.dart';
+import 'notifications_screen.dart';
 import '../providers/cart_provider.dart';
+import '../providers/notification_provider.dart';
 
 class HomeBottomBar extends StatefulWidget {
   static const routeName = '/home-bottom-bar';
+
   int userId;
 
   HomeBottomBar(this.userId);
@@ -39,6 +36,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
   var channel;
   String privateChannelName = '';
   String authBroadCast = '';
+
   @override
   void initState() {
     channel = WebSocketChannel.connect(
@@ -54,12 +52,14 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
       if (getData['event'] == 'pusher:connection_established') {
         socketId = jsonDecode(getData['data'])['socket_id'];
         Provider.of<NotificationProvider>(context, listen: false).broadcastAuth(
-            socketId,
-            channel_name,
-            '1|RcIInMNgjhllOGmcNyuDBEepf5LoSieeLsI7gDtha05d41a6',
-            channel);
+          socketId,
+          channel_name,
+          channel,
+        );
       }
-      if(getData['event'] == '')
+      if (getData['event'] == 'New Drug in Storage'){
+        setState(() => Provider.of<NotificationProvider>(context, listen: false).getNotification());
+      }
       print(getData);
     });
 
@@ -84,9 +84,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
       'screen': FavoritesScreen(),
     },
     {
-      'title': 
-      
-      Keys.profile.tr(),
+      'title': LocaleKeys.profile.tr(),
       'screen': ProfileScreen(),
     },
   ];
@@ -109,45 +107,36 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
           padding: const EdgeInsets.only(left: 10),
           child: Text(_screens[_selectedIndex]['title']),
         ),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(NotificationsScreen.routeName);
-            },
-            icon: const Icon(
-              Icons.notifications,
-            ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(15),
+            bottomLeft: Radius.circular(15),
           ),
         ),
         actions: [
           Consumer<CartProvider>(
             builder: (_, cart, ch) => Badge(
-              backgroundColor: colorScheme.background,
+              backgroundColor: Colors.transparent,
               // alignment: Alignment.bottomRight,
-              offset: const Offset(-10, 12),
+              offset: const Offset(-2, 4),
               label: Text(cart.items.length.toString()),
               child: ch,
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10.0, right: 5),
-              child: IconButton(
-                onPressed: () =>
-                    Navigator.of(context).pushNamed(CartScreen.routeName),
-                icon: const Icon(
-                  Icons.shopping_cart,
-                ),
+            child: IconButton(
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(CartScreen.routeName),
+              icon: const Icon(
+                Icons.shopping_cart,
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(SettingsScreen.routeName);
-              },
+              onPressed: () => Navigator.of(context)
+                  .pushNamed(NotificationsScreen.routeName),
               icon: const Icon(
-                Icons.settings,
+                Icons.notifications,
               ),
             ),
           ),

@@ -1,13 +1,11 @@
-import 'package:drug_drop2/translations/locale_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
-
-import '/screens/profile_screen.dart';
-import '/widgets/profile_item.dart';
+import 'package:drug_drop/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-import 'home_bottom_bar.dart';
+// import 'otp_screen.dart';
+import 'sign_up_otp_screen.dart';
 import 'log_in_screen.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/logo.dart';
@@ -124,7 +122,7 @@ class Circle extends StatelessWidget {
   }
 }
 
-var _isVisible;
+var _isVisible = false;
 
 class _signUpForm extends StatefulWidget {
   @override
@@ -132,6 +130,8 @@ class _signUpForm extends StatefulWidget {
 }
 
 class _signUpFormState extends State<_signUpForm> {
+  bool _isLoading = false;
+
   final _passwordController = TextEditingController();
   final _form = GlobalKey<FormState>();
   final Map<String, String> _authData = {
@@ -165,7 +165,10 @@ class _signUpFormState extends State<_signUpForm> {
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() => _isLoading = false);
+            },
             child: Text(LocaleKeys.try_again.tr()),
           ),
         ],
@@ -179,15 +182,17 @@ class _signUpFormState extends State<_signUpForm> {
     }
     _form.currentState!.save();
     try {
+      setState(() => _isLoading = true);
       await Provider.of<AuthProvider>(context, listen: false).signUp(
         _authData['name'].toString(),
         _authData['phoneNumber'].toString(),
         _authData['location'].toString(),
         _authData['password'].toString(),
       );
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          HomeBottomBar.routeName, (Route<dynamic> route) => false);
+      setState(() => _isLoading = false);
+      Navigator.of(context).pushNamed(SignUpOTPScreen.routeName);
     } catch (error) {
+      setState(() => _isLoading = false);
       _showDialog(context, error.toString());
     }
   }
@@ -289,7 +294,8 @@ class _signUpFormState extends State<_signUpForm> {
                   suffixIcon: IconButton(
                     onPressed: () => setState(() => _isVisible = !_isVisible),
                     icon: Icon(
-                        _isVisible ? Icons.visibility : Icons.visibility_off),
+                      _isVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
                   ),
                   suffixIconColor: theme.colorScheme.primary,
                   isDense: true,
@@ -382,27 +388,29 @@ class _signUpFormState extends State<_signUpForm> {
               ),
             ),
             const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                  HomeBottomBar.routeName, (Route<dynamic> route) => false),
-              // onPressed: _submit,
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Colors.white,
-              ),
-              child: Text(
-                LocaleKeys.sign_up.tr(),
-                style: TextStyle(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  fontFamily: 'Poppins',
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            _isLoading
+                ? const CircularProgressIndicator(
+                    strokeCap: StrokeCap.round,
+                  )
+                : ElevatedButton(
+                    onPressed: _submit,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text(
+                      LocaleKeys.sign_up.tr(),
+                      style: TextStyle(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

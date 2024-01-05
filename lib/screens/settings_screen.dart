@@ -22,7 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _darkMode = false;
   String _language = language[0];
   void signout() async {
-    await Provider.of<AuthProvider>(context, listen: false).logOut(token);
+    await Provider.of<AuthProvider>(context, listen: false).logout();
   }
 
   void _showDialog(BuildContext context, String content, String text) {

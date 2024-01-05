@@ -1,14 +1,14 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
-import 'reset_password_screen.dart';
+import 'log_in_screen.dart';
 import '../widgets/logo.dart';
 import '../widgets/my_upper_clipper.dart';
 
 var OTP = '';
 
-class OTPScreen extends StatelessWidget {
-  static const routeName = '/OTP';
+class SignUpOTPScreen extends StatelessWidget {
+  static const routeName = '/OTP-sign-up';
 
   bool checkOTP() {
     if (OTP == '111111') {
@@ -128,7 +128,7 @@ class OTPScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context)
-                          .pushReplacementNamed(ResetPasswordScreen.routeName);
+                          .pushReplacementNamed(LogInScreen.routeName);
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,

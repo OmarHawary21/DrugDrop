@@ -1,16 +1,15 @@
 import 'dart:convert';
 
-import 'package:drug_drop2/providers/notification_provider.dart';
-import 'package:drug_drop2/translations/locale_keys.g.dart';
+import '../providers/notification_provider.dart';
+import '../translations/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '/main.dart';
 
-import '/widgets/notification_item.dart';
+import '../widgets/notification_item.dart';
 import 'package:flutter/material.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 class NotificationsScreen extends StatefulWidget {
   static const routeName = '/notifications';
@@ -29,9 +28,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<NotificationProvider>(context, listen: false)
-          .getNotification(
-              '150|2Kv40IN9gavNF4rSpeuAwGBs1GnpeSOXa15D2jZHebfa673d')
+      Provider.of<NotificationProvider>(context)
+          .getNotification()
           .then((_) {
         setState(() {
           _isLoading = false;

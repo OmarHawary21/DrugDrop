@@ -2,14 +2,12 @@ import '../providers/drug_data.dart';
 
 class Tag {
   final int id;
-  final String en_name;
-  final String ar_name;
+  final String name;
   List<Drug> drugs;
 
   Tag({
     required this.id,
-    required this.en_name,
-    required this.ar_name,
+    required this.name,
     required this.drugs,
   });
 }

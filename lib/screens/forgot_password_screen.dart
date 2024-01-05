@@ -1,6 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:drug_drop2/translations/locale_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'otp_screen.dart';
@@ -124,7 +122,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.035),
                     child: Text(
-                      LocaleKeys.enter_your_phone_number.tr(),
+                      'Please enter your phone number.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'PollerOne',
@@ -155,7 +153,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                         ),
-                        label: Text(LocaleKeys.phone_number.tr()),
+                        label: const Text('Phone Number'),
                         isDense: true,
                         filled: true,
                         fillColor: Colors.transparent,
@@ -166,9 +164,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                       ),
                       validator: (phoneNumber) {
                         if (phoneNumber!.isEmpty) {
-                          return LocaleKeys.this_field_is_required.tr();
+                          return 'This field is required';
                         } else if (phoneNumber.length < 8) {
-                          return LocaleKeys.must_be_only_8_digits.tr();
+                          return 'Must be 8 digits';
                         }
                       },
                       onSaved: (phoneNumber) =>

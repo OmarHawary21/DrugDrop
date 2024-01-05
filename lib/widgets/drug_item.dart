@@ -1,89 +1,230 @@
-import '/main.dart';
-import '../translations/locale_keys.g.dart';
+import 'package:drug_drop/translations/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
-
-import '../providers/drugs_provider.dart';
-
-import '../providers/drug_data.dart';
-import '../screens/drug-details-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DrugItem extends StatelessWidget {
-  int id;
-  String? imageUrl = '';
-  String price;
-  String tradeName;
+import '../screens/drug_details_screen.dart';
+import '../providers/drugs_provider.dart';
+import '../providers/cart_provider.dart';
 
-  DrugItem(this.id, this.imageUrl, this.price, this.tradeName);
+int _selectedQuantity = 0;
+
+class DrugItem extends StatefulWidget {
+  final int id;
+  final String name;
+  final int price;
+  final int quantity;
+  final String imageUrl;
+  bool isFavorite;
+
+  DrugItem(this.id, this.imageUrl, this.price, this.quantity, this.name,
+      this.isFavorite);
 
   @override
+  State<DrugItem> createState() => _DrugItemState();
+}
+
+class _DrugItemState extends State<DrugItem> {
+  @override
   Widget build(BuildContext context) {
-    //print('hiiiiiiiiiiiiiiiiiiiiii DrugItem');
-    var theme = Theme.of(context);
-    var media = MediaQuery.of(context).size;
+    var primary = Theme.of(context).colorScheme.primary;
+    var secondary = Theme.of(context).colorScheme.secondary;
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     final scaffold = ScaffoldMessenger.of(context);
-    Drug drug;
-    //print(imageUrl);
-    return Container(
-      decoration: BoxDecoration(
-          //shape: BoxShape.circle,
-          //color: theme.colorScheme.secondary,
-          ),
-      padding: const EdgeInsets.all(10),
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () async {
-              // print('bfore fetching');
-              await Provider.of<DrugsProvider>(context, listen: false)
-                  .fetchDrug(id);
-              drug = Provider.of<DrugsProvider>(context, listen: false).item;
-              //print('${drug.id} before navigation------------');
-              Navigator.of(context).pushNamed(
-                DrugDetailsScreen.routeName,
-                arguments: drug.id,
-              );
-              // print(' ${drug}after navigations+++++++++++++++++++');
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: media.width * 0.002,
-                  vertical: media.height * 0.002),
-              child: imageUrl == 'null'
-                  ? CircleAvatar(
-                      backgroundColor: theme.colorScheme.secondary,
-                      radius: media.height * 0.06,
-                      backgroundImage: AssetImage(
-                        'assets/images/forgotPassword.png',
-                      ))
-                  : CircleAvatar(
-                      backgroundColor: theme.colorScheme.secondary,
-                      radius: media.height * 0.06,
-                      backgroundImage: NetworkImage(
-                        'http://${host}/${imageUrl}',
-                      ),
-                    ),
+    return InkWell(
+      onTap: () => Navigator.of(context).pushNamed(DrugDetailsScreen.routeName, arguments: widget.id),
+      child: Container(
+        width: width * 0.35,
+        margin: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              offset: const Offset(5, 5),
+              blurRadius: 15,
+              spreadRadius: -2,
             ),
+          ],
+        ),
+        child: GridTile(
+          header: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () {
+                  widget.isFavorite
+                      ? Provider.of<DrugsProvider>(context, listen: false)
+                          .removeFromFavorites(widget.id)
+                      : Provider.of<DrugsProvider>(context, listen: false)
+                          .addToFavorites(widget.id);
+                  setState(() => widget.isFavorite = !widget.isFavorite);
+                },
+                icon: Icon(
+                  widget.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: Colors.red,
+                  size: width * 0.06,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => Dialog(
+                      widget.id,
+                      widget.name,
+                      widget.price,
+                      widget.quantity,
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: primary,
+                  size: width * 0.06,
+                ),
+              ),
+            ],
           ),
-          Text(
-            '$price ${LocaleKeys.sp.tr()}',
-            style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                color: theme.colorScheme.primary),
+          child: Column(
+            children: [
+              Flexible(
+                flex: 6,
+                child: Image.asset(
+                  'assets/images/forgotPassword.png',
+                  color: Colors.white.withOpacity(0.6),
+                  colorBlendMode: BlendMode.modulate,
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Container(
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    bottom: 6,
+                    top: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: primary,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: width * 0.15,
+                        child: Text(
+                          widget.name,
+                          softWrap: true,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: width * 0.02,
+                            color: secondary,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ),
+                      Text(
+                        '${widget.price} S.P',
+                        style: TextStyle(
+                          fontSize: width * 0.02,
+                          color: secondary,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
           ),
-          //SizedBox(height: media.height * 0.001),
-          Text(
-            tradeName,
-            style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-                color: theme.colorScheme.primary),
+        ),
+      ),
+    );
+  }
+}
+
+class Dialog extends StatefulWidget {
+  final int id;
+  final String title;
+  final int price;
+  final int quantity;
+
+  Dialog(this.id, this.title, this.price, this.quantity);
+
+  @override
+  State<Dialog> createState() => _DialogState();
+}
+
+class _DialogState extends State<Dialog> {
+  @override
+  Widget build(BuildContext context) {
+    final cart = Provider.of<CartProvider>(context);
+    return SizedBox(
+      child: AlertDialog(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Center(
+          child: Text(
+            'Indicate Your Quantity',
+            style: TextStyle(color: Theme.of(context).colorScheme.background),
           ),
+        ),
+        content: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () {
+                if (_selectedQuantity > 0) setState(() => _selectedQuantity--);
+              },
+              icon: Icon(
+                Icons.remove_circle_rounded,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            Text('$_selectedQuantity'),
+            IconButton(
+              onPressed: () {
+                if (_selectedQuantity < widget.quantity)
+                  setState(() => _selectedQuantity++);
+                print(_selectedQuantity);
+              },
+              icon: Icon(
+                Icons.add_circle_rounded,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              cart.addToCart(
+                  widget.id, widget.title, widget.price, _selectedQuantity);
+              _selectedQuantity = 0;
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                 SnackBar(
+                  content: Text(
+                    LocaleKeys.added_item_to_cart.tr(),
+                  ),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            },
+            child: Text(LocaleKeys.add_to_cart.tr()),
+          )
         ],
       ),
     );

@@ -1,18 +1,32 @@
-import 'package:drug_drop2/translations/locale_keys.g.dart';
+import 'package:drug_drop/translations/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
-import '../widgets/drug_item.dart';
-import '../providers/drug_data.dart';
-
+import 'drug_item.dart';
 import '../screens/see_all_screen.dart';
+import '../providers/drug_data.dart';
+import '../providers/tags_provider.dart';
 
-class TagItem extends StatelessWidget {
+class TagItem extends StatefulWidget {
   static const routeName = '/tag-item';
+
+  final int catId;
   final int tagId;
   final String tagTitle;
   final List<Drug> drugs;
+
+  TagItem(this.tagId, this.tagTitle, this.drugs, this.catId);
+
+  @override
+  State<TagItem> createState() => _TagItemState();
+}
+
+class _TagItemState extends State<TagItem> {
+  bool _isInit = false;
+  bool _isLoading = false;
+
   final List<String> imagePath = [
     'assets/images/Medicine.svg',
     'assets/images/spoon and syrup.svg',
@@ -23,16 +37,24 @@ class TagItem extends StatelessWidget {
     'assets/images/eye-dropper.svg',
   ];
 
-  TagItem(this.tagId, this.tagTitle, this.drugs);
+  @override
+  void didChangeDependencies() async {
+    if (!_isInit) {
+      setState(() => _isLoading = true);
+      // await Provider.of<TagsProvider>(context)
+      //     .fetchTagDrugs(widget.tagId, widget.catId);
+      setState(() => _isLoading = false);
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).colorScheme;
     var media = MediaQuery.of(context).size;
-    //here we are getting the id of category and not for a tag
 
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 5),
       child: Column(
         children: [
           Padding(
@@ -42,10 +64,13 @@ class TagItem extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    SvgPicture.asset(imagePath[tagId - 1]),
+                    SizedBox(
+                      width: 35,
+                      child: SvgPicture.asset(imagePath[widget.tagId]),
+                    ),
                     const SizedBox(width: 15),
                     Text(
-                      tagTitle,
+                      widget.tagTitle,
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w700,
@@ -58,9 +83,12 @@ class TagItem extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context)
-                        .pushNamed(SeeAllScreen.routeName, arguments: tagId);
+                        .pushNamed(SeeAllScreen.routeName, arguments: {
+                      'tagId': widget.tagId,
+                      'catId': widget.catId,
+                    });
                   },
-                  child: Text('${LocaleKeys.see_all.tr()}...'),
+                  child: Text(LocaleKeys.see_all.tr()),
                 ),
               ],
             ),
@@ -71,15 +99,16 @@ class TagItem extends StatelessWidget {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemBuilder: (ctx, i) => DrugItem(
-                drugs[i].id!,
-                drugs[i].imageUrl!,
-                drugs[i].price.toString(),
-                drugs[i].tradeName!,
+                widget.drugs[i].id,
+                widget.drugs[i].imageUrl,
+                widget.drugs[i].price,
+                widget.drugs[i].quantity,
+                widget.drugs[i].tradeName,
+                widget.drugs[i].isFavorite,
               ),
-              itemCount: drugs.length,
+              itemCount: widget.drugs.length,
             ),
           ),
-          Divider(),
         ],
       ),
     );

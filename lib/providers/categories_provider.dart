@@ -1,34 +1,18 @@
 import 'dart:convert';
-import '../main.dart';
 
-import '../providers/category.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../main.dart';
+import '../models/category.dart';
+
 class CategoriesProvider with ChangeNotifier {
-  List<Categories> _categories = [
-    // Categories(id: 0, en_name: 'Antibiotics', ar_name: 'عربي'),
-    // Categories(id: 1, en_name: 'Antibiotics', ar_name: 'عربي'),
-    // Categories(id: 2, en_name: 'Antibiotics', ar_name: 'عربي'),
-    // Categories(id: 3, en_name: 'Antibiotics', ar_name: 'عربي'),
-    // Categories(id: 4, name: 'Antibiotics'),
-    // Categories(id: 5, name: 'Antibiotics'),
-    // Categories(id: 6, name: 'Antibiotics'),
-    // Categories(id: 7, name: 'Antibiotics'),
-    // Categories(id: 8, name: 'Heart'),
-    // Categories(id: 9, name: 'Antibiotics'),
-    // {'name': 'Antibiotics', 'icon': Icons.local_hospital},
-    // {'name': 'Analgesics', 'icon': Icons.local_hospital},
-    // {'name': 'Psychiatric and Neurological', 'icon': Icons.local_hospital},
-    // {'name': 'Hormonal', 'icon': Icons.local_hospital},
-    // {'name': 'Diabetes', 'icon': Icons.local_hospital},
-    // {'name': 'Heart', 'icon': Icons.local_hospital},
-    // {'name': 'Respiratory', 'icon': Icons.local_hospital},
-    // {'name': 'Gastrointestinal', 'icon': Icons.local_hospital},
-    // {'name': 'Nutritional', 'icon': Icons.local_hospital},
-    // {'name': 'Cosmetics', 'icon': Icons.local_hospital},
-  ];
+  final String token;
+
+  CategoriesProvider(this.token);
+
+  List<Categories> _categories = [];
 
   List<Categories> get categories {
     return [..._categories];
@@ -39,15 +23,15 @@ class CategoriesProvider with ChangeNotifier {
   }
 
   Future<void> fetchCategories() async {
-    var url = Uri.http(host, '/api/category/get');
+    final url = Uri.http(host, '/api/category/get');
     try {
       final response = await http.get(url, headers: {
+        // 'ngrok-skip-browser-warning': '1',
         'Accept': 'application/json',
         'Authorization':
-            'Bearer 1|RcIInMNgjhllOGmcNyuDBEepf5LoSieeLsI7gDtha05d41a6'
-      });
+            'Bearer $token',
+      },);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      print(extractedData);
       final List<Categories> loadedCategories = [];
       if (extractedData == Null) {
         return;
@@ -62,7 +46,6 @@ class CategoriesProvider with ChangeNotifier {
       _categories = loadedCategories;
       notifyListeners();
     } catch (error) {
-      print(error.toString());
       //throw (error);
     }
   }

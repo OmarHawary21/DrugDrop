@@ -1,5 +1,3 @@
-import 'package:drug_drop2/translations/locale_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:animate_do/animate_do.dart';
@@ -25,6 +23,7 @@ class _IntroScreensState extends State<IntroScreens> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: FadeIn(
         duration: const Duration(milliseconds: 2000),
@@ -50,21 +49,21 @@ class _IntroScreensState extends State<IntroScreens> {
                   ),
                 ),
                 Text(
-                  LocaleKeys.order_medicine_online.tr(),
+                  'Order Medicine Online',
                   style: TextStyle(
                     fontFamily: 'PollerOne',
-                    fontSize: 24,
+                    fontSize: width * 0.05,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 Container(
-                  alignment: Alignment.center,
                   margin: const EdgeInsets.symmetric(vertical: 20),
                   child: Text(
                     'this is description.this is description.this is \ndescription.this is description.',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 16,
+                      fontSize: width * 0.04,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
@@ -87,21 +86,21 @@ class _IntroScreensState extends State<IntroScreens> {
                     ),
                   ),
                   Text(
-                    LocaleKeys.easy_order_fast_delivery.tr(),
+                    'Easy Order Fast Delivery',
                     style: TextStyle(
                       fontFamily: 'PollerOne',
-                      fontSize: 24,
+                      fontSize: width * 0.05,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   Container(
-                    alignment: Alignment.center,
                     margin: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
                       'this is description.this is description.this is \ndescription.this is description.',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 16,
+                        fontSize: width * 0.04,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
@@ -123,21 +122,21 @@ class _IntroScreensState extends State<IntroScreens> {
                     ),
                   ),
                   Text(
-                    LocaleKeys.huge_medicines_variety.tr(),
+                    'Huge  Medicines Variety',
                     style: TextStyle(
                       fontFamily: 'PollerOne',
-                      fontSize: 24,
+                      fontSize: width * 0.05,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   Container(
-                    alignment: Alignment.center,
                     margin: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
                       'this is description.this is description.this is \ndescription.this is description.',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 16,
+                        fontSize: width * 0.04,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
@@ -164,8 +163,8 @@ class _IntroScreensState extends State<IntroScreens> {
                   ),
                 );
               },
-              child: Text(
-                LocaleKeys.get_started.tr(),
+              child: const Text(
+                'Get Started',
                 style: TextStyle(
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.bold,
@@ -185,8 +184,8 @@ class _IntroScreensState extends State<IntroScreens> {
                     onPressed: () => Navigator.of(context)
                         .pushNamedAndRemoveUntil(
                             SignUpScreen.routeName, (route) => false),
-                    child: Text(
-                      LocaleKeys.skip.tr(),
+                    child: const Text(
+                      'Skip',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.bold,
@@ -221,8 +220,8 @@ class _IntroScreensState extends State<IntroScreens> {
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeIn,
                     ),
-                    child: Text(
-                      LocaleKeys.next.tr(),
+                    child: const Text(
+                      'Next',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.bold,

@@ -10,88 +10,43 @@ class DrugsProvider with ChangeNotifier {
 
   DrugsProvider(this.token);
 
-  var _item = Drug(
-      // id: 1,
-      // tradeName: 'tradeName',
-      // scientificName: 'scientificName',
-      // company: 'company',
-      // description: 'description',
-      // tagId: 1,
-      // dose: 10,
-      // doseUnit: 'doseUnit',
-      // price: 10,
-      // quantity: 10,
-      // expiryDate: 'expiryDate',
-      // imageUrl: 'null'
-      );
+  late Drug _drugInfo = Drug(
+    id: 0,
+    tradeName: '',
+    scientificName: '',
+    company: '',
+    tagId: 0,
+    dose: 0,
+    doseUnit: '',
+    price: 0,
+    quantity: 0,
+    expiryDate: '',
+    imageUrl: 'null',
+  );
 
   List<Drug> _favoriteItems = [];
 
-//this should take another look
-  Drug findDrugById(int id) {
-    return _item;
-  }
-
-  Drug get item {
-    return _item;
+  Drug get drugInfo {
+    return _drugInfo;
   }
 
   List<Drug> get favoriteItems {
     return [..._favoriteItems];
   }
 
-  Future<void> fetchDrug(int id) async {
-    var url = Uri.http(host, '/api/drug/get/$id', {'lang_code': 'ar'});
-    try {
-      print('before get-------------------------------');
-      final response = await http.get(url, headers: {
-        // 'ngrok-skip-browser-warning': '1',
-        // 'content-type': 'multipart/form-data',
-        'Accept': 'application/json',
-        'Authorization':
-            'Bearer 1|RcIInMNgjhllOGmcNyuDBEepf5LoSieeLsI7gDtha05d41a6'
-      });
-      print(url);
-      final extractedData =
-          (json.decode(response.body) as Map<String, dynamic>)['Data'];
-      print(extractedData);
-      Drug loadedDrug;
-      print('im here');
-
-      if (extractedData == Null) {
-        return;
-      }
-      loadedDrug = Drug(
-          id: extractedData['id'],
-          tradeName: extractedData['trade_name'],
-          scientificName: extractedData['scientific_name'],
-          company: extractedData['company'],
-          tagId: extractedData['tag_id'],
-          dose: extractedData['dose'],
-          doseUnit: extractedData['doseUnit'],
-          price: extractedData['price'],
-          quantity: extractedData['quantity'],
-          expiryDate: extractedData['expiryDate'],
-          imageUrl: extractedData['img_url'] ?? 'null',
-          description: extractedData['description']);
-      _item = loadedDrug;
-      notifyListeners();
-    } catch (error) {
-      //print(error.toString());
-      throw (error);
-    }
-  }
-
   Future<void> fetchFavorites() async {
     final url = Uri.http(host, '/api/favorite/get', {'lang_code': 'en'});
+
     final response = await http.get(url, headers: {
+      // 'ngrok-skip-browser-warning': '1',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
+
     final data = json.decode(response.body);
     final drugs = data['Data'] as List<dynamic>;
     final List<Drug> temp = [];
-    drugs.forEach((drug) {
+    for (var drug in drugs) {
       temp.add(
         Drug(
           id: drug['id'],
@@ -109,7 +64,7 @@ class DrugsProvider with ChangeNotifier {
         ),
       );
       _favoriteItems = temp;
-    });
+    }
   }
 
   Future<void> addToFavorites(int id) async {
@@ -122,9 +77,6 @@ class DrugsProvider with ChangeNotifier {
     final data = json.decode(response.body);
     final responseData = data['Status'];
     if (responseData == 'Success') {
-      final editedDrug = findDrugById(id);
-      editedDrug.isFavorite = true;
-      _favoriteItems.add(editedDrug);
       notifyListeners();
     }
   }
@@ -142,5 +94,35 @@ class DrugsProvider with ChangeNotifier {
       _favoriteItems.removeWhere((element) => element.id == id);
       notifyListeners();
     }
+  }
+
+  Future<void> getDrugInfo(int id) async {
+    final url = Uri.parse('http://$host/api/drug/get/$id?lang_code=en');
+
+    final response = await http.get(
+      url,
+      headers: {
+        // 'ngrok-skip-browser-warning': '1',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    final data = json.decode(response.body);
+    final responseData = data['Data'];
+    _drugInfo = Drug(
+      id: responseData['id'],
+      tradeName: responseData['trade_name'],
+      scientificName: responseData['scientific_name'],
+      company: responseData['company'],
+      tagId: responseData['tag_id'],
+      dose: responseData['dose'],
+      doseUnit: responseData['dose_unit'],
+      price: responseData['price'],
+      quantity: responseData['quantity'],
+      expiryDate: responseData['expiry_date'],
+      imageUrl: responseData['img_url'].toString(),
+      description: responseData['description'],
+    );
   }
 }

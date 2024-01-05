@@ -1,5 +1,5 @@
-import 'package:drug_drop2/main.dart';
-import 'package:drug_drop2/models/notification_model.dart';
+import '../main.dart';
+import '../models/notification_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -7,6 +7,10 @@ import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class NotificationProvider with ChangeNotifier {
+  final String token;
+
+  NotificationProvider(this.token);
+
   List<NotificationModel> _notifications = [];
   String _auth = '';
   String _channelName = '';
@@ -20,17 +24,17 @@ class NotificationProvider with ChangeNotifier {
   }
 
   List<NotificationModel> get notifications {
-    return [..._notifications];
+    return [..._notifications.reversed];
   }
 
-  Future<void> broadcastAuth(String socketId, String channel, String token,
+  Future<void> broadcastAuth(String socketId, String channel,
       WebSocketChannel webChannel) async {
     print('${socketId}+++++++++++++++++++++++++++++++++++++++++++++++++');
     print(channel);
     var url = Uri.http(host, '/api/broadcasting/auth');
     final response = await http.post(url, headers: {
       'Accept': 'application/json',
-      'Authorization': 'Bearer ${token}'
+      'Authorization': 'Bearer $token'
     }, body: {
       'socket_id': socketId,
       'channel_name': channel
@@ -47,13 +51,13 @@ class NotificationProvider with ChangeNotifier {
     print('$_channelName');
   }
 
-  Future<void> getNotification(String token) async {
+  Future<void> getNotification() async {
     var url = Uri.http(host, '/api/notification/get');
     try {
       final response = await http.get(url, headers: {
         'Accept': 'application/json',
         'Authorization':
-            'Bearer 95|6H02dQIVG7hEdqYU2vMFALoB0S6ycMwsyDxbYfdSb18c2872'
+            'Bearer $token'
       });
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       print(extractedData);
@@ -74,5 +78,4 @@ class NotificationProvider with ChangeNotifier {
       //throw (error);
     }
   }
-  
 }

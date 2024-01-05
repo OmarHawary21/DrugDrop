@@ -25,11 +25,12 @@ class AuthProvider with ChangeNotifier {
   }
 
   bool get isAuth {
-    return token.isNotEmpty;
+    return token != '';
   }
 
   Future<void> login(String phoneNumber, String password) async {
     final url = Uri.parse('http://$host/api/user/login');
+    print(url);
     try {
       final response = await http.post(
         url,
@@ -43,7 +44,6 @@ class AuthProvider with ChangeNotifier {
       if (responseData == null) {
         throw Exception();
       }
-      print(responseData);
       if (responseData['Status'] == 'Failed') {
         throw Exception('Failed');
       }
@@ -70,24 +70,56 @@ class AuthProvider with ChangeNotifier {
         },
       );
       final responseData = json.decode(response.body);
+      print(responseData);
       if (responseData == null) {
         throw Exception();
       }
       if (responseData['Status'] == 'Failed') {
-        throw Exception('Failed');
+        throw Exception(responseData['Error']);
       }
-      _token = responseData['Data']['token'];
       notifyListeners();
     } catch (error) {
       rethrow;
     }
   }
 
-  Future<void> forgotPassword(String phoneNumber) async {
-    final url = Uri.parse('http://$host/api/user/create');
+  Future<void> logout() async {
+    final url = Uri.parse('http://$host/api/user/logout');
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final data = json.decode(response.body);
+    } catch (error) {
+      rethrow;
+    }
+    _token = '';
+    notifyListeners();
   }
 
-  Future<void> logOut(String token) async {
-    final url = Uri.http(host, '/$token');
+  Future<void> codeVerification(String phoneNumber, String code) async {
+    final url = Uri.parse('http://$host/api/user/recive_verification_code');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: {
+        'phone_number': phoneNumber,
+        'pin_code': code,
+      }
+    );
+    final data = json.decode(response.body);
+    print(data);
+  }
+
+  Future<void> forgotPassword(String phoneNumber) async {
+    final url = Uri.parse('http://$host/api/user/create');
   }
 }
