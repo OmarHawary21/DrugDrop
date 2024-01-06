@@ -1,4 +1,3 @@
-import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +20,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     if (_isInit) {
       setState(() => _isLoading = true);
       await Provider.of<CategoriesProvider>(context)
-          .fetchCategories().timeout(const Duration(seconds: 3));
+          .fetchCategories()
+          .timeout(const Duration(seconds: 5));
       setState(() => _isLoading = false);
     }
     _isInit = false;
@@ -30,37 +30,41 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Locale currentLocale = Localizations.localeOf(context);
     final categoryData =
         Provider.of<CategoriesProvider>(context, listen: false).categories;
     var colorScheme = Theme.of(context).colorScheme;
     return FadeInRight(
       duration: const Duration(milliseconds: 400),
       child: _isLoading
-          ? Center(
-              child: CircleAvatar(
-                radius: 60,
-                child: LiquidCircularProgressIndicator(
-                  value: 0.4,
-                  backgroundColor: colorScheme.secondary,
-                  valueColor: AlwaysStoppedAnimation(colorScheme.primary),
-                  center: Text(
-                    "Loading...",
-                    style: TextStyle(color: colorScheme.primary),
+          ? Center(child: CircularProgressIndicator())
+          : categoryData.isEmpty
+              ? Center(
+                  child: Text(
+                    'No categories to see.',
+                    style: TextStyle(
+                      color: colorScheme.primary,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: ListView.builder(
+                    itemCount: categoryData.length,
+                    itemBuilder: (_, i) => Column(
+                      children: [
+                        CategroyItem(
+                          categoryData[i].id,
+                          currentLocale.languageCode == 'en'
+                              ? categoryData[i].en_name
+                              : categoryData[i].ar_name,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )
-          : ListView.builder(
-              itemCount: categoryData.length,
-              itemBuilder: (_, i) => Column(
-                children: [
-                  CategroyItem(
-                    categoryData[i].id,
-                    categoryData[i].name,
-                  ),
-                ],
-              ),
-            ),
     );
   }
 }

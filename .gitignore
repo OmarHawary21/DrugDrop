@@ -46,6 +46,7 @@ app.*.map.json
 .dart_tool
 .idea
 android
+back_end
 build
 ios
 linux
