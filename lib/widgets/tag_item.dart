@@ -1,3 +1,5 @@
+import 'package:drug_drop/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -10,11 +12,12 @@ import '../providers/tags_provider.dart';
 class TagItem extends StatefulWidget {
   static const routeName = '/tag-item';
 
+  final int catId;
   final int tagId;
   final String tagTitle;
   final List<Drug> drugs;
 
-  TagItem(this.tagId, this.tagTitle, this.drugs);
+  TagItem(this.tagId, this.tagTitle, this.drugs, this.catId);
 
   @override
   State<TagItem> createState() => _TagItemState();
@@ -27,17 +30,20 @@ class _TagItemState extends State<TagItem> {
   final List<String> imagePath = [
     'assets/images/Medicine.svg',
     'assets/images/spoon and syrup.svg',
-    'assets/images/cream.svg',
     'assets/images/Syringe.svg',
+    'assets/images/eye-dropper.svg',
     'assets/images/spray-can.svg',
+    'assets/images/cream.svg',
+    'assets/images/eye-dropper.svg',
     'assets/images/eye-dropper.svg',
   ];
 
   @override
   void didChangeDependencies() async {
-    if (!_isInit){
+    if (!_isInit) {
       setState(() => _isLoading = true);
-      await Provider.of<TagsProvider>(context).fetchTagDrugs(widget.tagId);
+      // await Provider.of<TagsProvider>(context)
+      //     .fetchTagDrugs(widget.tagId, widget.catId);
       setState(() => _isLoading = false);
     }
     super.didChangeDependencies();
@@ -78,9 +84,12 @@ class _TagItemState extends State<TagItem> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context)
-                        .pushNamed(SeeAllScreen.routeName, arguments: widget.tagId);
+                        .pushNamed(SeeAllScreen.routeName, arguments: {
+                      'tagId': widget.tagId,
+                      'catId': widget.catId,
+                    });
                   },
-                  child: const Text('See all...'),
+                  child: Text(LocaleKeys.see_all.tr()),
                 ),
               ],
             ),
@@ -93,8 +102,10 @@ class _TagItemState extends State<TagItem> {
               itemBuilder: (ctx, i) => DrugItem(
                 widget.drugs[i].id,
                 widget.drugs[i].imageUrl,
-                widget.drugs[i].price.toString(),
+                widget.drugs[i].price,
+                widget.drugs[i].quantity,
                 widget.drugs[i].tradeName,
+                widget.drugs[i].isFavorite,
               ),
               itemCount: widget.drugs.length,
             ),

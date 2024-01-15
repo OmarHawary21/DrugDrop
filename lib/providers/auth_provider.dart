@@ -8,12 +8,29 @@ import '../main.dart';
 
 class AuthProvider with ChangeNotifier {
   String _token = '';
+  int _userId = 0;
+  Map<String, String> _userData = {
+    'name': '',
+    'phoneNumber': '',
+    'location': '',
+  };
 
   String get token {
     if (_token.isNotEmpty) {
       return _token;
     }
     return '';
+  }
+
+  int get userId {
+    if (_userId != 0) {
+      return _userId;
+    }
+    return -1;
+  }
+
+  Map<String, String> get userData {
+    return {..._userData};
   }
 
   bool get isAuth {
@@ -25,9 +42,7 @@ class AuthProvider with ChangeNotifier {
     try {
       final response = await http.post(
         url,
-        headers: {
-          'Accept': 'application/json'
-        },
+        headers: {'Accept': 'application/json'},
         body: {
           'phone_number': '09$phoneNumber',
           'password': password,
@@ -41,20 +56,23 @@ class AuthProvider with ChangeNotifier {
         throw Exception('Failed');
       }
       _token = responseData['Data']['token'];
+      _userId = responseData['Data']['id'];
+      _userData['name'] = responseData['Data']['name'];
+      _userData['phoneNumber'] = responseData['Data']['phone_number'];
+      _userData['location'] = responseData['Data']['location'];
       notifyListeners();
     } catch (error) {
       rethrow;
     }
   }
 
-  Future<void> signUp(String name, String phoneNumber, String location, String password) async {
+  Future<void> signUp(
+      String name, String phoneNumber, String location, String password) async {
     final url = Uri.parse('http://$host/api/user/create');
     try {
       final response = await http.put(
         url,
-        headers: {
-          'Accept': 'application/json'
-        },
+        headers: {'Accept': 'application/json'},
         body: {
           'name': name,
           'phone_number': '09$phoneNumber',
@@ -63,13 +81,13 @@ class AuthProvider with ChangeNotifier {
         },
       );
       final responseData = json.decode(response.body);
+      print(responseData);
       if (responseData == null) {
         throw Exception();
       }
       if (responseData['Status'] == 'Failed') {
-        throw Exception('Failed');
+        throw Exception(responseData['Error']);
       }
-      _token = responseData['Data']['token'];
       notifyListeners();
     } catch (error) {
       rethrow;
@@ -93,7 +111,25 @@ class AuthProvider with ChangeNotifier {
     _token = '';
     notifyListeners();
   }
-  
+
+  Future<void> codeVerification(String phoneNumber, String code) async {
+    final url = Uri.parse('http://$host/api/user/recive_verification_code');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: {
+        'phone_number': phoneNumber,
+        'pin_code': code,
+      }
+    );
+    final data = json.decode(response.body);
+    print(data);
+  }
+
   Future<void> forgotPassword(String phoneNumber) async {
     final url = Uri.parse('http://$host/api/user/create');
   }

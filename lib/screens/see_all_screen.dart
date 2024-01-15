@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'cart_screen.dart';
+import 'notifications_screen.dart';
 import '../providers/tags_provider.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/drug_card.dart';
@@ -16,13 +17,15 @@ class SeeAllScreen extends StatefulWidget {
 class _SeeAllScreenState extends State<SeeAllScreen> {
   bool _isInit = false;
   bool _isLoading = false;
-  late final tagId = ModalRoute.of(context)?.settings.arguments as int;
+  late final args = ModalRoute.of(context)?.settings.arguments as Map<String, int>;
+  late final tagId = args['tagId'];
+  late final catId = args['catId'];
 
   @override
   void didChangeDependencies() async {
     if (!_isInit) {
       setState(() => _isLoading = true);
-      await Provider.of<TagsProvider>(context).fetchAndSetTags(tagId);
+      await Provider.of<TagsProvider>(context).fetchTagDrugs(tagId!, catId!);
       setState(() => _isLoading = false);
     }
     _isInit = true;
@@ -33,7 +36,7 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
   Widget build(BuildContext context) {
     final tag =
         Provider.of<TagsProvider>(context).findTagById(tagId.toString());
-    final drugs = tag.drugs;
+    final drugs = Provider.of<TagsProvider>(context).drugs;
 
     return Scaffold(
       appBar: AppBar(
@@ -57,9 +60,9 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).pushNamed(NotificationsScreen.routeName),
               icon: const Icon(
-                Icons.settings,
+                Icons.notifications,
               ),
             ),
           ),
@@ -74,6 +77,7 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
                 drugs[index].id,
                 drugs[index].tradeName,
                 drugs[index].price,
+                drugs[index].quantity,
                 drugs[index].imageUrl,
                 drugs[index].isFavorite,
               ),

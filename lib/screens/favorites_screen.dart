@@ -13,18 +13,23 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   bool _isLoading = false;
+  bool _isInit = false;
 
   @override
   void didChangeDependencies() async {
-    setState(() => _isLoading = true);
-    await Provider.of<DrugsProvider>(context).fetchFavorites();
-    setState(() => _isLoading = false);
+    if (!_isInit) {
+      setState(() => _isLoading = true);
+      await Provider.of<DrugsProvider>(context).fetchFavorites();
+      setState(() => _isLoading = false);
+    }
+    _isInit = true;
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    final favorites = Provider.of<DrugsProvider>(context).favoriteItems;
+    final favorites =
+        Provider.of<DrugsProvider>(context, listen: false).favoriteItems;
     final primary = Theme.of(context).colorScheme.primary;
     final secondary = Theme.of(context).colorScheme.secondary;
     return _isLoading
@@ -47,7 +52,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   favorites[index].id,
                   favorites[index].tradeName,
                   favorites[index].price,
-                  '',
+                  favorites[index].quantity,
+                  favorites[index].imageUrl,
                   favorites[index].isFavorite,
                 ),
                 itemCount: favorites.length,

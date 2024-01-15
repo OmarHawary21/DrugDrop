@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 
 import '../main.dart';
 import '../models/category.dart';
-import '../data/data.dart' as dummy;
 
 class CategoriesProvider with ChangeNotifier {
   final String token;
@@ -27,10 +26,11 @@ class CategoriesProvider with ChangeNotifier {
     final url = Uri.http(host, '/api/category/get');
     try {
       final response = await http.get(url, headers: {
+        // 'ngrok-skip-browser-warning': '1',
         'Accept': 'application/json',
         'Authorization':
-            'Bearer $token'
-      });
+            'Bearer $token',
+      },);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Categories> loadedCategories = [];
       if (extractedData == Null) {
@@ -39,7 +39,8 @@ class CategoriesProvider with ChangeNotifier {
       extractedData['Data'].forEach((index) {
         loadedCategories.add(Categories(
           id: index['id'],
-          name: index['en_name'],
+          en_name: index['en_name'],
+          ar_name: index['ar_name'],
         ));
       });
       _categories = loadedCategories;

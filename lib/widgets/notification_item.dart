@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
-class ProfileItem extends StatelessWidget {
+class NotificationItem extends StatefulWidget {
   String title;
-  String subtitle;
-  IconData iconData;
-  VoidCallback function;
-  ProfileItem(this.title, this.subtitle, this.iconData, this.function);
+  String message;
+  String date;
 
+  NotificationItem(this.title, this.message, this.date);
+
+  @override
+  State<NotificationItem> createState() => _NotificationItemState();
+}
+
+class _NotificationItemState extends State<NotificationItem> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -14,7 +19,7 @@ class ProfileItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: theme.scaffoldBackgroundColor,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
                 offset: Offset(0, 5),
@@ -23,15 +28,17 @@ class ProfileItem extends StatelessWidget {
                 blurRadius: 10)
           ]),
       child: ListTile(
-        onTap: function,
         title: Text(
-          title,
+          widget.title,
           style: TextStyle(color: theme.colorScheme.primary),
         ),
-        subtitle: Text(subtitle),
-        leading: Icon(
-          iconData,
-          color: theme.colorScheme.primary,
+        subtitle: Text(' ${widget.message}'),
+        leading: CircleAvatar(
+          backgroundColor: theme.colorScheme.background.withOpacity(0.6),
+          child: Icon(
+            Icons.notifications_active,
+            color: theme.colorScheme.primary,
+          ),
         ),
         //trailing: Icon(Icons.arrow_forward, color: Colors.grey.shade400),
         tileColor: theme.scaffoldBackgroundColor,

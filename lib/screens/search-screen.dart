@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/search-provider.dart';
 
-import '/screens/drug-details-screen.dart';
+import '/screens/drug_details_screen.dart';
 import '/widgets/category_item.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -25,6 +25,7 @@ class _SearchScreenState extends State<SearchScreen> {
     'Medicine',
   ];
   var _isLoading = false;
+
   void _showDialog(BuildContext context, String text) {
     showDialog(
       context: context,
@@ -64,6 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 onPressed: () {
                   updateData(searchData['type']!, searchData['value']!,
                       searchData['category']!);
+                  Navigator.of(context).pop();
                 },
                 child: const Text('search'),
               ),
@@ -185,7 +187,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             children: [
                               CategroyItem(
                                 categories[i].id,
-                                categories[i].name,
+                                categories[i].en_name,
                               ),
                             ],
                           ),

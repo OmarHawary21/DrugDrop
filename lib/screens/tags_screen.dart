@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'cart_screen.dart';
+import 'notifications_screen.dart';
 import '../widgets/tag_item.dart';
 import '../providers/tags_provider.dart';
 import '../providers/categories_provider.dart';
@@ -31,10 +32,12 @@ class _TagsScreenState extends State<TagsScreen> {
   Widget build(BuildContext context) {
     final catData = Provider.of<CategoriesProvider>(context).findById(catId);
     final tags = Provider.of<TagsProvider>(context, listen: false).tags;
-
+    Locale currentLocale = Localizations.localeOf(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(catData.name),
+        title: Text(currentLocale.languageCode == 'en'
+            ? catData.en_name
+            : catData.ar_name),
         actions: [
           Consumer<CartProvider>(
             builder: (_, cart, ch) => Badge(
@@ -54,9 +57,9 @@ class _TagsScreenState extends State<TagsScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).pushNamed(NotificationsScreen.routeName),
               icon: const Icon(
-                Icons.settings,
+                Icons.notifications,
               ),
             ),
           ),
@@ -67,16 +70,16 @@ class _TagsScreenState extends State<TagsScreen> {
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              itemBuilder: (_, index) => Column(
+              itemBuilder: (_, index) => tags[index].drugs.isNotEmpty ? Column(
                 children: [
-                  TagItem(tags[index].id, tags[index].name, tags[index].drugs),
+                  TagItem(tags[index].id, tags[index].name, tags[index].drugs, catId),
                   Divider(
                     color: Theme.of(context).colorScheme.primary,
                     indent: 40,
                     endIndent: 40,
                   ),
                 ],
-              ),
+              ) : Container(),
               itemCount: tags.length,
             ),
     );

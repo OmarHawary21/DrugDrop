@@ -1,3 +1,5 @@
+import 'package:drug_drop/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,14 +7,12 @@ import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 
 class CartItem extends StatelessWidget {
-  final String id;
   final int productId;
   final String title;
   final int price;
   final int quantity;
 
   CartItem(
-    this.id,
     this.productId,
     this.title,
     this.price,
@@ -24,12 +24,12 @@ class CartItem extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
     return Dismissible(
-      key: ValueKey(id),
+      key: ValueKey(productId),
       direction: DismissDirection.endToStart,
       background: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: theme.colorScheme.error,
+          color: theme.scaffoldBackgroundColor,
         ),
         margin: const EdgeInsets.symmetric(
           horizontal: 10,
@@ -40,7 +40,7 @@ class CartItem extends StatelessWidget {
         child: const Icon(
           Icons.delete,
           size: 30,
-          color: Colors.white,
+          color: Colors.red,
         ),
       ),
       confirmDismiss: (direction) {
@@ -53,20 +53,21 @@ class CartItem extends StatelessWidget {
               color: theme.colorScheme.error,
             ),
             actionsAlignment: MainAxisAlignment.spaceAround,
-            title: const Text('Are you sure?'),
-            content: const Text('This will delete this item from the cart'),
+            title:  Text('${LocaleKeys.are_you_sure.tr()}?'),
+            content:  Text(LocaleKeys.this_will_delete_from_cart.tr()),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(ctx).pop(false);
                 },
-                child: const Text('NO'),
+                child:  Text(LocaleKeys.no.tr()),
               ),
               TextButton(
                 onPressed: () {
+
                   Navigator.of(ctx).pop(true);
                 },
-                child: const Text('YES'),
+                child:  Text(LocaleKeys.yes.tr()),
               ),
             ],
           ),
@@ -75,7 +76,7 @@ class CartItem extends StatelessWidget {
       onDismissed: (direction) => Provider.of<CartProvider>(
         context,
         listen: false,
-      ).removeItem(productId),
+      ).removeSingleItem(productId),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         elevation: 5,
@@ -95,7 +96,8 @@ class CartItem extends StatelessWidget {
               ),
             ),
             title: Text(title),
-            subtitle: Text('Price for one: $price (S.P)'),
+            subtitle: Text('${LocaleKeys.price.tr()}: $price (${LocaleKeys.sp.tr()
+            })'),
             trailing: Text(
               'x $quantity',
               style: const TextStyle(fontSize: 12),
