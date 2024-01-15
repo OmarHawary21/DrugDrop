@@ -107,17 +107,10 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
           padding: const EdgeInsets.only(left: 10),
           child: Text(_screens[_selectedIndex]['title']),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(15),
-            bottomLeft: Radius.circular(15),
-          ),
-        ),
         actions: [
           Consumer<CartProvider>(
             builder: (_, cart, ch) => Badge(
               backgroundColor: Colors.transparent,
-              // alignment: Alignment.bottomRight,
               offset: const Offset(-2, 4),
               label: Text(cart.items.length.toString()),
               child: ch,

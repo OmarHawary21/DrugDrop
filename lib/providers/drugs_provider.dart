@@ -1,7 +1,7 @@
 import 'dart:convert';
 import '../main.dart';
 
-import '../providers/drug_data.dart';
+import '../models/drug_data.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,24 +47,26 @@ class DrugsProvider with ChangeNotifier {
     final drugs = data['Data'] as List<dynamic>;
     final List<Drug> temp = [];
     for (var drug in drugs) {
-      temp.add(
-        Drug(
-          id: drug['id'],
-          tradeName: drug['trade_name'],
-          scientificName: drug['scientific_name'],
-          company: drug['company'],
-          tagId: drug['tag_id'],
-          dose: drug['dose'],
-          doseUnit: drug['dose_unit'],
-          price: drug['price'],
-          quantity: drug['quantity'],
-          expiryDate: drug['expiry_date'],
-          imageUrl: drug['img_url'].toString(),
-          isFavorite: true,
-        ),
-      );
-      _favoriteItems = temp;
+      if (drug['img_url'] != null) {
+        temp.add(
+          Drug(
+            id: drug['id'],
+            tradeName: drug['trade_name'],
+            scientificName: drug['scientific_name'],
+            company: drug['company'],
+            tagId: drug['tag_id'],
+            dose: drug['dose'],
+            doseUnit: drug['dose_unit'],
+            price: drug['price'],
+            quantity: drug['quantity'],
+            expiryDate: drug['expiry_date'],
+            imageUrl: drug['img_url'].toString(),
+            isFavorite: true,
+          ),
+        );
+      }
     }
+    _favoriteItems = temp;
   }
 
   Future<void> addToFavorites(int id) async {

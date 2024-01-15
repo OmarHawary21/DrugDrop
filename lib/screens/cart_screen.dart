@@ -66,6 +66,7 @@ class _CartScreenState extends State<CartScreen> {
                             cart[i].title,
                             cart[i].price,
                             cart[i].quantity,
+                            cart[i].imgUrl,
                           ),
                           itemCount: cart.length,
                         ),

@@ -80,6 +80,7 @@ class _DrugItemState extends State<DrugItem> {
                       widget.name,
                       widget.price,
                       widget.quantity,
+                      widget.imageUrl,
                     ),
                   );
                 },
@@ -105,7 +106,7 @@ class _DrugItemState extends State<DrugItem> {
                         )
                       : Image.network(
                           'http://$host/${widget.imageUrl}',
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitWidth,
                         ),
                 ),
               ),
@@ -169,8 +170,9 @@ class Dialog extends StatefulWidget {
   final String title;
   final int price;
   final int quantity;
+  final String imgUrl;
 
-  Dialog(this.id, this.title, this.price, this.quantity);
+  Dialog(this.id, this.title, this.price, this.quantity, this.imgUrl);
 
   @override
   State<Dialog> createState() => _DialogState();
@@ -221,7 +223,7 @@ class _DialogState extends State<Dialog> {
             onPressed: () {
               Navigator.of(context).pop();
               cart.addToCart(
-                  widget.id, widget.title, widget.price, _selectedQuantity);
+                  widget.id, widget.title, widget.price, _selectedQuantity, widget.imgUrl,);
               _selectedQuantity = 0;
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(

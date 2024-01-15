@@ -1,4 +1,4 @@
-import '../providers/drug_data.dart';
+import 'drug_data.dart';
 
 class Tag {
   final int id;

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'drug_item.dart';
 import '../screens/see_all_screen.dart';
-import '../providers/drug_data.dart';
+import '../models/drug_data.dart';
 import '../providers/tags_provider.dart';
 
 class TagItem extends StatefulWidget {
@@ -24,9 +24,6 @@ class TagItem extends StatefulWidget {
 }
 
 class _TagItemState extends State<TagItem> {
-  bool _isInit = false;
-  bool _isLoading = false;
-
   final List<String> imagePath = [
     'assets/images/Medicine.svg',
     'assets/images/spoon and syrup.svg',
@@ -39,20 +36,8 @@ class _TagItemState extends State<TagItem> {
   ];
 
   @override
-  void didChangeDependencies() async {
-    if (!_isInit) {
-      setState(() => _isLoading = true);
-      // await Provider.of<TagsProvider>(context)
-      //     .fetchTagDrugs(widget.tagId, widget.catId);
-      setState(() => _isLoading = false);
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).colorScheme;
-    var media = MediaQuery.of(context).size;
 
     return Padding(
       padding: const EdgeInsets.only(top: 5),

@@ -1,10 +1,9 @@
-import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
-import '../providers/categories_provider.dart';
-import '../providers/drugs_provider.dart';
-import '/widgets/category_item.dart';
+
+import '../widgets/home_item.dart';
+import '../widgets/browse_by_category.dart';
+import '../providers/tags_provider.dart';
 
 class CategoriesScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -14,69 +13,37 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-  var _isInit = true;
-  var _isLoading = false;
+  bool _isInit = false;
+  bool _isLoading = false;
 
   @override
   void didChangeDependencies() async {
-    if (_isInit) {
+    if (!_isInit) {
       setState(() => _isLoading = true);
-      await Provider.of<CategoriesProvider>(context)
-          .fetchCategories()
-          .timeout(const Duration(seconds: 5));
+      await Provider.of<TagsProvider>(context).fetchAndSetTags(1);
       setState(() => _isLoading = false);
     }
-    _isInit = false;
+    _isInit = true;
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    Locale currentLocale = Localizations.localeOf(context);
-    final categoryData =
-        Provider.of<CategoriesProvider>(context, listen: false).categories;
-    var colorScheme = Theme.of(context).colorScheme;
+    final tags = Provider.of<TagsProvider>(context).tags;
+
     return _isLoading
-        ? Center(
-            child: CircleAvatar(
-              radius: 60,
-              child: LiquidCircularProgressIndicator(
-                value: 0.4,
-                backgroundColor: colorScheme.secondary,
-                valueColor: AlwaysStoppedAnimation(colorScheme.primary),
-                center: Text(
-                  "Loading...",
-                  style: TextStyle(color: colorScheme.primary),
-                ),
-              ),
+        ? const Center(
+            child: CircularProgressIndicator(
+              strokeCap: StrokeCap.round,
             ),
           )
-        : categoryData.isEmpty
-            ? Center(
-                child: Text(
-                  'No categories to see.',
-                  style: TextStyle(
-                    color: colorScheme.primary,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              )
-            : Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ListView.builder(
-                  itemCount: categoryData.length,
-                  itemBuilder: (_, i) => Column(
-                    children: [
-                      CategroyItem(
-                        categoryData[i].id,
-                        currentLocale.languageCode == 'en'
-                            ? categoryData[i].en_name
-                            : categoryData[i].ar_name,
-                      ),
-                    ],
-                  ),
-                ),
-            );
+        : ListView(
+            children: [
+              Category(),
+              HomeItem(_isLoading, 'Newest', tags[6].drugs),
+              HomeItem(_isLoading, 'Best Sellers', tags[3].drugs),
+              HomeItem(_isLoading, 'Sales', tags[5].drugs),
+            ],
+          );
   }
 }

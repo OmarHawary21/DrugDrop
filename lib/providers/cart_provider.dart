@@ -26,12 +26,13 @@ class CartProvider with ChangeNotifier {
     return _total;
   }
 
-  void addToCart(int id, String title, int price, int quantity) {
+  void addToCart(int id, String title, int price, int quantity, String imgUrl) {
     _items.add(CartItemModel(
       productId: id,
       title: title,
       price: price,
       quantity: quantity,
+      imgUrl: imgUrl,
     ));
     notifyListeners();
   }

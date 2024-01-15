@@ -97,6 +97,7 @@ class OrdersProvider extends ChangeNotifier {
           title: drug['Drug Name'],
           quantity: drug['Quantity'],
           price: drug['Drug Price'],
+          imgUrl: '',
         ),
       );
     }

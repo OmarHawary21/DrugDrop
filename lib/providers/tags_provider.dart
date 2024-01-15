@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'drug_data.dart';
+import '../models/drug_data.dart';
 import '../main.dart';
 import '../models/tag.dart';
 
@@ -19,7 +19,7 @@ class TagsProvider with ChangeNotifier {
     return [..._tags];
   }
 
-  List<Drug> get drugs{
+  List<Drug> get drugs {
     return [..._drugs];
   }
 
@@ -41,7 +41,6 @@ class TagsProvider with ChangeNotifier {
       });
       final extractedData = json.decode(response.body);
       final data = extractedData['Data'] as List<dynamic>;
-      print(data);
       final List<Tag> loadedTags = [];
       data.forEach(
         (tagData) {
@@ -49,25 +48,26 @@ class TagsProvider with ChangeNotifier {
           String tempName = tagData['en_name'];
           final List<Drug> tempDrug = [];
           for (var drugData in tagData['drugs']) {
-            tempDrug.add(Drug(
-                id: drugData['id'],
-                tradeName: drugData['trade_name'],
-                scientificName: drugData['scientific_name'],
-                company: drugData['company'],
-                tagId: drugData['tag_id'],
-                dose: drugData['dose'],
-                doseUnit: drugData['dose_unit'],
-                price: drugData['price'],
-                quantity: drugData['quantity'],
-                expiryDate: drugData['expiryDate'].toString(),
-                imageUrl: drugData['img_url'].toString(),
-                isFavorite: drugData['is_favorite']));
+            if (drugData['img_url'] != null) {
+              tempDrug.add(Drug(
+                  id: drugData['id'],
+                  tradeName: drugData['trade_name'],
+                  scientificName: drugData['scientific_name'],
+                  company: drugData['company'],
+                  tagId: drugData['tag_id'],
+                  dose: drugData['dose'],
+                  doseUnit: drugData['dose_unit'],
+                  price: drugData['price'],
+                  quantity: drugData['quantity'],
+                  expiryDate: drugData['expiryDate'].toString(),
+                  imageUrl: drugData['img_url'].toString(),
+                  isFavorite: drugData['is_favorite']));
+            }
           }
           loadedTags.add(Tag(id: tempID, name: tempName, drugs: tempDrug));
         },
       );
       _tags = loadedTags;
-      print(_tags);
       notifyListeners();
     } catch (error) {
       throw (error);
@@ -75,8 +75,8 @@ class TagsProvider with ChangeNotifier {
   }
 
   Future<void> fetchTagDrugs(int id, int catId) async {
-    final url =
-        Uri.parse('http://$host/api/drug/get/category/$catId/tag/$id?lang_code=en');
+    final url = Uri.parse(
+        'http://$host/api/drug/get/category/$catId/tag/$id?lang_code=en');
 
     final response = await http.get(url, headers: {
       // 'ngrok-skip-browser-warning': '1',
@@ -85,24 +85,25 @@ class TagsProvider with ChangeNotifier {
     });
     final data = json.decode(response.body);
     final responseData = data['Data'] as List<dynamic>;
-    print(responseData);
     final List<Drug> temp = [];
-    responseData.forEach((drug) {
-      temp.add(Drug(
-        id: drug['id'],
-        tradeName: drug['trade_name'],
-        scientificName: drug['scientific_name'],
-        company: drug['company'],
-        tagId: drug['tag_id'],
-        dose: drug['dose'],
-        doseUnit: drug['dose_unit'],
-        price: drug['price'],
-        quantity: drug['quantity'],
-        expiryDate: drug['expiry_date'],
-        imageUrl: drug['img_url'].toString(),
-        isFavorite: drug['is_favorite'],
-      ));
-    });
+    for (var drug in responseData) {
+      if (drug['img_url'] != null) {
+        temp.add(Drug(
+          id: drug['id'],
+          tradeName: drug['trade_name'],
+          scientificName: drug['scientific_name'],
+          company: drug['company'],
+          tagId: drug['tag_id'],
+          dose: drug['dose'],
+          doseUnit: drug['dose_unit'],
+          price: drug['price'],
+          quantity: drug['quantity'],
+          expiryDate: drug['expiry_date'],
+          imageUrl: drug['img_url'].toString(),
+          isFavorite: drug['is_favorite'],
+        ));
+      }
+    }
     _drugs = temp;
   }
 }

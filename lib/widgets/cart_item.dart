@@ -1,9 +1,9 @@
-import 'package:drug_drop/translations/locale_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:drug_drop/translations/locale_keys.g.dart';
 
+import '../main.dart';
 import '../providers/cart_provider.dart';
 
 class CartItem extends StatelessWidget {
@@ -11,12 +11,14 @@ class CartItem extends StatelessWidget {
   final String title;
   final int price;
   final int quantity;
+  final String imgUrl;
 
   CartItem(
     this.productId,
     this.title,
     this.price,
     this.quantity,
+    this.imgUrl,
   );
 
   @override
@@ -53,21 +55,20 @@ class CartItem extends StatelessWidget {
               color: theme.colorScheme.error,
             ),
             actionsAlignment: MainAxisAlignment.spaceAround,
-            title:  Text('${LocaleKeys.are_you_sure.tr()}?'),
-            content:  Text(LocaleKeys.this_will_delete_from_cart.tr()),
+            title: Text('${LocaleKeys.are_you_sure.tr()}?'),
+            content: Text(LocaleKeys.this_will_delete_from_cart.tr()),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(ctx).pop(false);
                 },
-                child:  Text(LocaleKeys.no.tr()),
+                child: Text(LocaleKeys.no.tr()),
               ),
               TextButton(
                 onPressed: () {
-
                   Navigator.of(ctx).pop(true);
                 },
-                child:  Text(LocaleKeys.yes.tr()),
+                child: Text(LocaleKeys.yes.tr()),
               ),
             ],
           ),
@@ -91,13 +92,11 @@ class CartItem extends StatelessWidget {
             leading: CircleAvatar(
               backgroundColor: theme.colorScheme.primary,
               radius: 25,
-              child: const FittedBox(
-                child: Text('Drug Image'),
-              ),
+              backgroundImage: NetworkImage('http://$host/$imgUrl'),
             ),
             title: Text(title),
-            subtitle: Text('${LocaleKeys.price.tr()}: $price (${LocaleKeys.sp.tr()
-            })'),
+            subtitle: Text(
+                '${LocaleKeys.price.tr()}: $price (${LocaleKeys.sp.tr()})'),
             trailing: Text(
               'x $quantity',
               style: const TextStyle(fontSize: 12),
